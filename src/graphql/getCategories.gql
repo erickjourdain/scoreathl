@@ -1,0 +1,13 @@
+query getCategories {
+  categories {
+    id
+    nom
+    genre
+    notations {
+      epreuve {
+        id
+      }
+      points
+    }
+  }
+}

@@ -1,0 +1,9 @@
+query getEpreuves {
+  epreuves {
+    id
+    nom
+    unitePrincipale
+    uniteSecondaire
+    erreur
+  }
+}

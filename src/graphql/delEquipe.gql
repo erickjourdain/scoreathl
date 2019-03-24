@@ -1,0 +1,7 @@
+mutation  delEquipe(
+  $id: ID!
+  ) {
+	supprimerEquipe (
+    id: $id
+    )
+}

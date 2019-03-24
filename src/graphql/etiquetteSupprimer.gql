@@ -1,0 +1,6 @@
+mutation EtiquetteSupprimer (
+  $id: ID!
+  ) {
+	supprimerEtiquette (
+    id: $id)
+}

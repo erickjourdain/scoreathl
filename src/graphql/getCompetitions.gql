@@ -1,0 +1,10 @@
+query getCompetitions {
+  competitions {
+    id
+    nom
+    date
+    emplacement
+    image
+		statut
+  }
+}

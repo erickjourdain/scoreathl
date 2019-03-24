@@ -1,0 +1,8 @@
+mutation loginServicesUpdate (
+	$index: String!,
+	$value: String!)
+{
+	updateLoginServices (
+		index: $index,
+		value: $value) @client
+}

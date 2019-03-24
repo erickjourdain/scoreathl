@@ -1,0 +1,13 @@
+mutation loginFacebook ($token: String!) {
+  loginFacebook(token: $token){
+    user {
+      id
+      nom
+      role
+      email
+      avatar
+      service
+    }
+    token
+  }
+}

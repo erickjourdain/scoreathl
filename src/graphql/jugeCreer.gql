@@ -1,0 +1,21 @@
+mutation JugeCreer (
+  $competition: ID!,
+  $juges:[JugeInput!]!
+  ) {
+	defineCompetitionJuges (
+    competition: $competition,
+    juges: $juges
+  ) {
+    juges {
+      id
+      user {
+        id
+        nom
+      }
+      epreuves {
+        id
+        nom
+      }
+    }
+  }
+}

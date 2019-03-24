@@ -1,0 +1,79 @@
+mutation EquipeCreer (
+  $nom: String!,
+  $adulte: AthleteInputFull!,
+  $enfant: AthleteInputFull!,
+  $competition: ID!,
+  $pwd: String,
+  $etiquette: ID,
+  $statut: Boolean,
+  $avatar: Upload,
+  ) {
+	creerEquipe (
+    nom: $nom,
+    adulte: $adulte,
+    enfant: $enfant,
+    competition: $competition,
+    pwd: $pwd,
+    etiquette: $etiquette,
+    statut: $statut,
+    avatar: $avatar
+    ) {
+      id
+      nom
+      avatar
+      etiquette {
+        id
+        valeur
+      }
+      adulte {
+        id
+        nom
+        prenom
+        categorie {
+          id
+          nom
+        }
+        avatar
+        score {
+          points
+          resultats {
+            epreuve {
+              id
+              nom
+              unitePrincipale
+            }
+            resultat
+            score
+          }
+        }
+      }
+      enfant {
+        id
+        nom
+        prenom
+        categorie {
+          id
+          nom
+        }
+        avatar
+        score {
+          points
+          resultats {
+            epreuve {
+              id
+              nom
+              unitePrincipale
+            }
+            resultat
+            score
+          }
+        }
+      }
+      statut
+      points
+      proprietaire {
+        id
+        nom
+      }
+    }
+}

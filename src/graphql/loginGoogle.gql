@@ -1,0 +1,13 @@
+mutation loginGoogle ($token: String!) {
+  loginGoogle(token: $token){
+    user {
+      id
+      nom
+      role
+      email
+      avatar
+      service
+    }
+    token
+  }
+}

@@ -1,0 +1,10 @@
+query userCurrent {
+  currentUser @client {
+    id
+    nom
+    role
+    email
+    service
+    avatar
+  }
+}

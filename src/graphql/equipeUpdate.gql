@@ -1,0 +1,22 @@
+mutation EquipeUpdate (
+  $id: ID!
+  $nom: String,
+  $adulte: AthleteInput,
+  $enfant: AthleteInput,
+  $etiquette: ID,
+  $statut: Boolean,
+  $avatar: Upload
+  ) {
+	majEquipe (
+    id: $id,
+    nom: $nom,
+    adulte: $adulte,
+    enfant: $enfant,
+    etiquette: $etiquette,
+    statut: $statut,
+    avatar: $avatar
+    ) {
+      id
+      nom
+    }
+}

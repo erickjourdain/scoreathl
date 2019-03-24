@@ -1,0 +1,6 @@
+query servicesLogin {
+  loginServices @client {
+    google
+    facebook
+  }
+}

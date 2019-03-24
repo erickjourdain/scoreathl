@@ -1,0 +1,16 @@
+mutation currentUserUpdate (
+	$id: ID!
+	$nom: String!,
+	$role: String!,
+	$email: String!,
+	$service: String!,
+	$avatar: String!)
+{
+	updateCurrentUser (
+		id: $id,
+		nom: $nom,
+		role: $role,
+		email: $email,
+		service: $service,
+		avatar: $avatar) @client
+}

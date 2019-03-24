@@ -1,0 +1,14 @@
+mutation currentCompetitionUpdate (
+  $id: ID!
+	$nom: String!
+	$statut: Boolean!
+	$organisateurs: [User!]
+	$juges: [Juge!])
+{
+	updateCurrentCompetition (
+		id: $id
+    nom: $nom,
+		statut: $statut,
+		organisateurs: $organisateurs,
+		juges: $juges) @client
+}

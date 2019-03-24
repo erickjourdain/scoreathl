@@ -1,0 +1,17 @@
+mutation creerUser (
+  $nom: String!,
+  $email: String!,
+  $password: String!,
+  $role: String,
+  $avatar: Upload
+  ) {
+	creerUser (
+    nom: $nom,
+    email: $email,
+    password: $password,
+    role: $role,
+    avatar: $avatar) {
+      id
+      nom
+	  }
+}

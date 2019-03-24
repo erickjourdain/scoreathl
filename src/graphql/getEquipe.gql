@@ -1,0 +1,73 @@
+query getEquipe($id: ID!) {
+  equipe(id: $id) {
+    id
+    nom
+    avatar
+    statut
+    points
+    etiquette {
+      id
+      valeur
+    }
+    adulte {
+      id
+      prenom
+      nom
+      avatar
+      dateNaissance
+      score {
+        id
+        points
+        resultats {
+          epreuve {
+            id
+            nom
+            unitePrincipale
+            uniteSecondaire
+          }
+          resultat
+          score
+          statut
+        }
+      }
+      categorie {
+        nom
+        genre
+      }
+    }
+    enfant {
+      id
+      prenom
+      nom
+      avatar
+      dateNaissance
+      categorie {
+        id
+        nom
+      }
+      score {
+        id
+        points
+        resultats {
+          epreuve {
+            id
+            nom
+            unitePrincipale
+            uniteSecondaire
+          }
+          resultat
+          score
+          statut
+        }
+      }
+      categorie {
+        nom
+        genre
+      }
+    }
+    proprietaire {
+      id
+      nom
+    }
+  }
+}

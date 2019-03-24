@@ -1,0 +1,14 @@
+query getCompetitionJuges($competition: ID!) {
+  jugesCompetition (competition: $competition) {
+    id
+    user {
+      id
+      nom
+      avatar
+    }
+    epreuves {
+      id
+      nom
+    }
+  }
+}

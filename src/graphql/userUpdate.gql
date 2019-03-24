@@ -1,0 +1,10 @@
+mutation userUpdate ($id: ID!, $nom: String, $role: String, $avatar: Upload, $email: String) {
+  majUser(id: $id, nom: $nom, role: $role, avatar: $avatar, email: $email) {
+    nom
+    role
+    email
+    avatar
+    service
+    createdAt
+  }
+}

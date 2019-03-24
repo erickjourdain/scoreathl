@@ -1,0 +1,63 @@
+query getEquipesCompetition($id: ID!, $statut: Boolean) {
+  competitionEquipes(id: $id, statut: $statut) {
+    id
+    nom
+    avatar
+    statut
+    points
+    etiquette {
+      id
+      valeur
+    }
+    adulte {
+      id
+      prenom
+      nom
+      avatar
+      score {
+        id
+        points
+        resultats {
+          epreuve {
+            id
+            nom
+            unitePrincipale
+            uniteSecondaire
+          }
+          resultat
+          score
+          statut
+        }
+      }
+    }
+    enfant {
+      id
+      prenom
+      nom
+      avatar
+      categorie {
+        id
+        nom
+      }
+      score {
+        id
+        points
+        resultats {
+          epreuve {
+            id
+            nom
+            unitePrincipale
+            uniteSecondaire
+          }
+          resultat
+          score
+          statut
+        }
+      }
+    }
+    proprietaire {
+      id
+      nom
+    }
+  }
+}

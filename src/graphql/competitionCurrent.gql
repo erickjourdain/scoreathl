@@ -1,0 +1,18 @@
+query competitionCurrent {
+  currentCompetition @client {
+    id
+    nom
+    statut
+    organisateurs {
+      id
+    }
+    juges {
+      user {
+        id
+      }
+      epreuves {
+        id
+      }
+    }
+  }
+}

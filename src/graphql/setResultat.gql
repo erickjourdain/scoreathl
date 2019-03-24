@@ -1,0 +1,25 @@
+mutation setResultat (
+  $athlete: ID!,
+  $resultat: ResultatInput!
+  ) {
+	athleteResultat (
+    athlete: $athlete,
+    resultat: $resultat
+  ) {
+    id
+    score {
+      id
+      points
+      resultats {
+        epreuve {
+          id
+          nom
+          unitePrincipale
+        }
+        resultat
+        score
+        statut
+      }
+    }
+  }
+}

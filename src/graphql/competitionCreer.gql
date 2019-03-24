@@ -1,0 +1,25 @@
+mutation CompetitionCreer (
+  $nom: String!,
+  $emplacement: String!,
+  $date: Date!,
+  $pwd: String!,
+  $organisateurs: [ID!]!,
+  $statut: Boolean!,
+  $image: Upload
+  ) {
+	creerCompetition (
+    nom: $nom,
+    emplacement: $emplacement,
+    date: $date,
+    pwd: $pwd,
+    organisateurs: $organisateurs,
+    statut: $statut,
+    image: $image) {
+      id
+      nom
+      date
+      emplacement
+      image
+      statut
+	  }
+}

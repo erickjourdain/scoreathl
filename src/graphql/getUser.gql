@@ -1,0 +1,10 @@
+query getUser($id: ID!) {
+  user (id: $id) {
+    id
+    nom
+    role
+    service
+		avatar
+    createdAt
+  }
+}

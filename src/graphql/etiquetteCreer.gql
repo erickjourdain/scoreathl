@@ -1,0 +1,10 @@
+mutation EtiquetteCreer (
+  $valeur: String!
+  ) {
+	creerEtiquette (
+    valeur: $valeur) {
+      id
+      valeur
+      utilisee
+	  }
+}

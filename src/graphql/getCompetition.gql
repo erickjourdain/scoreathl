@@ -1,0 +1,85 @@
+query getCompetition($id: ID!) {
+  competition (id: $id) {
+    id
+    nom
+    date
+    emplacement
+    image
+		statut
+    organisateurs {
+      id
+      nom
+    }
+    juges {
+      user {
+        id
+        nom
+      }
+      epreuves {
+        id
+        nom
+      }
+    }
+    equipes {
+      id
+      nom
+      avatar
+      etiquette {
+        id
+        valeur
+      }
+      adulte {
+        id
+        nom
+        prenom
+        categorie {
+          id
+          nom
+        }
+        avatar
+        score {
+          points
+          resultats {
+            epreuve {
+              id
+              nom
+              unitePrincipale
+            }
+            resultat
+            score
+            statut
+          }
+        }
+      }
+      enfant {
+        id
+        nom
+        prenom
+        categorie {
+          id
+          nom
+        }
+        avatar
+        score {
+          points
+          resultats {
+            epreuve {
+              id
+              nom
+              unitePrincipale
+            }
+            resultat
+            score
+            statut
+          }
+        }
+      }
+      statut
+      points
+      proprietaire {
+        id
+        nom
+      }
+    }
+  }
+}

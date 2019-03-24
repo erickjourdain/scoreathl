@@ -1,0 +1,7 @@
+query getEtiquettes {
+  etiquettes {
+    id
+    valeur
+    utilisee
+  }
+}
