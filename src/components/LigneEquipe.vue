@@ -40,10 +40,10 @@ export default {
   computed: {
     nbEpreuves () {
       let nbEpreuves = 0
-      for (let resultat of this.equipe.adulte.score.resultats) {
+      for (let resultat of this.equipe.adulte.scores) {
         nbEpreuves = (resultat.statut === 2) ? (nbEpreuves + 1) : nbEpreuves
       }
-      for (let resultat of this.equipe.enfant.score.resultats) {
+      for (let resultat of this.equipe.enfant.scores) {
         nbEpreuves = (resultat.statut === 2) ? (nbEpreuves + 1) : nbEpreuves
       }
       return nbEpreuves

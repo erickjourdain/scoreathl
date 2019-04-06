@@ -23,9 +23,15 @@
 
 <script>
 import { mapState } from 'vuex'
+import apolloClient from '@/apollo'
 
 export default {
   name: 'Competition',
+  data () {
+    return {
+      observers: {}
+    }
+  },
   computed: {
     ...mapState('competition', {
       competition: 'current'
@@ -33,6 +39,57 @@ export default {
   },
   created () {
     this.$store.dispatch('competition/getCompetition', { id: this.$route.params.competition })
+    const store = this.$store
+    this.observers.modifAthlete = apolloClient.subscribe({
+      query: require('@/graphql/subscriptionAthleteModif.gql'),
+      variables: { competition: this.$route.params.competition }
+    }).subscribe({
+      next (data) {
+        store.dispatch('competition/modificationEquipe', { id: data.data.modificationAthlete.equipe })
+      },
+      error (error) {
+        store.commit('main/SET_ERROR', error)
+      }
+    })
+    this.observers.creerEquipe = apolloClient.subscribe({
+      query: require('@/graphql/subscriptionEquipeCreer.gql'),
+      variables: { competition: this.$route.params.competition }
+    }).subscribe({
+      next (data) {
+        store.dispatch('competition/nouvelleEquipe', { id: data.data.nouvelleEquipe.equipe })
+      },
+      error (error) {
+        store.commit('main/SET_ERROR', error)
+      }
+    })
+    this.observers.modifEquipe = apolloClient.subscribe({
+      query: require('@/graphql/subscriptionEquipeModif.gql'),
+      variables: { competition: this.$route.params.competition }
+    }).subscribe({
+      next (data) {
+        store.dispatch('competition/modificationEquipe', { id: data.data.modificationEquipe.equipe })
+      },
+      error (error) {
+        store.commit('main/SET_ERROR', error)
+      }
+    })
+    this.observers.suppEquipe = apolloClient.subscribe({
+      query: require('@/graphql/subscriptionEquipeSupp.gql'),
+      variables: { competition: this.$route.params.competition }
+    }).subscribe({
+      next (data) {
+        store.dispatch('competition/suppressionEquipe', { id: data.data.suppressionEquipe.equipe })
+      },
+      error (error) {
+        store.commit('main/SET_ERROR', error)
+      }
+    })
+  },
+  beforeDestroy () {
+    this.observers.modifAthlete.unsubscribe()
+    this.observers.creerEquipe.unsubscribe()
+    this.observers.modifEquipe.unsubscribe()
+    this.observers.suppEquipe.unsubscribe()
   },
   async destroyed () {
     await this.$store.commit('competition/SET_CURRENT', null)

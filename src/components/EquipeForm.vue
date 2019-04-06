@@ -72,14 +72,14 @@ export default {
         enfant: {
           nom: this.equipe.enfant.nom,
           prenom: this.equipe.enfant.prenom,
-          dateNaissance: this.equipe.enfant.dateNaissance,
+          annee: this.equipe.enfant.annee,
           genre: this.equipe.enfant.categorie.genre,
           avatar: this.equipe.enfant.avatar
         },
         adulte: {
           nom: this.equipe.adulte.nom,
           prenom: this.equipe.adulte.prenom,
-          dateNaissance: this.equipe.adulte.dateNaissance,
+          annee: this.equipe.adulte.annee,
           genre: this.equipe.adulte.categorie.genre,
           avatar: this.equipe.adulte.avatar
         },
@@ -116,7 +116,7 @@ export default {
       return (this.isOrganisator || this.isAdmin)
     },
     requiredPwd () {
-      return !this.adminOrOrganisateur && this.equipe.id
+      return !this.adminOrOrganisateur && !this.equipe.id
     }
   },
   methods: {
@@ -134,114 +134,83 @@ export default {
     },
     async submit () {
       if (this.$refs.equipeForm.validate()) {
-        try {
-          let variables = {}
-          if (this.equipe.id) {
-            variables.id = this.equipe.id
-            if (this.form.nom !== this.equipe.nom) {
-              variables.nom = this.form.nom
-            }
-            if (this.form.etiquette !== this.equipe.etiquette) {
-              variables.etiquette = this.form.etiquette
-            }
-            if (this.form.statut !== this.equipe.statut) {
-              variables.statut = this.form.statut
-            }
-            if (this.form.enfant.nom !== this.equipe.enfant.nom) {
-              if (!variables.enfant) {
-                variables.enfant = {}
-              }
-              variables.enfant.nom = this.form.enfant.nom
-            }
-            if (this.form.enfant.prenom !== this.equipe.enfant.prenom) {
-              if (!variables.enfant) {
-                variables.enfant = {}
-              }
-              variables.enfant.prenom = this.form.enfant.prenom
-            }
-            if (this.form.enfant.dateNaissance !== this.equipe.enfant.dateNaissance) {
-              if (!variables.enfant) {
-                variables.enfant = {}
-              }
-              variables.enfant.dateNaissance = this.form.enfant.dateNaissance
-            }
-            if (this.form.enfant.genre !== this.equipe.enfant.genre) {
-              if (!variables.enfant) {
-                variables.enfant = {}
-              }
-              variables.enfant.genre = this.form.enfant.genre
-            }
-            if (this.form.adulte.nom !== this.equipe.adulte.nom) {
-              if (!variables.adulte) {
-                variables.adulte = {}
-              }
-              variables.adulte.nom = this.form.adulte.nom
-            }
-            if (this.form.adulte.prenom !== this.equipe.adulte.prenom) {
-              if (!variables.adulte) {
-                variables.adulte = {}
-              }
-              variables.adulte.prenom = this.form.adulte.prenom
-            }
-            if (this.form.adulte.dateNaissance !== this.equipe.adulte.dateNaissance) {
-              if (!variables.adulte) {
-                variables.adulte = {}
-              }
-              variables.adulte.dateNaissance = this.form.adulte.dateNaissance
-            }
-            if (this.form.adulte.genre !== this.equipe.adulte.genre) {
-              if (!variables.adulte) {
-                variables.adulte = {}
-              }
-              variables.adulte.genre = this.form.adulte.genre
-            }
-          } else {
-            variables = {
-              nom: this.form.nom,
-              competition: this.$route.params.competition,
-              etiquette: this.form.etiquette,
-              adulte: {
-                nom: this.form.adulte.nom,
-                prenom: this.form.adulte.prenom,
-                dateNaissance: this.form.adulte.dateNaissance,
-                genre: this.form.adulte.genre
-              },
-              enfant: {
-                nom: this.form.enfant.nom,
-                prenom: this.form.enfant.prenom,
-                dateNaissance: this.form.enfant.dateNaissance,
-                genre: this.form.enfant.genre
-              },
-              statut: this.form.statut
-            }
-            if (this.form.pwd) {
-              variables.pwd = this.form.pwd
-            }
+        let variables = {}
+        if (this.equipe.id) {
+          variables.id = this.equipe.id
+          if (this.form.nom !== this.equipe.nom) variables.nom = this.form.nom
+          if (this.form.etiquette !== this.equipe.etiquette) variables.etiquette = this.form.etiquette
+          if (this.form.statut !== this.equipe.statut) variables.statut = this.form.statut
+          if (this.form.enfant.nom !== this.equipe.enfant.nom) {
+            if (!variables.enfant) variables.enfant = {}
+            variables.enfant.nom = this.form.enfant.nom
           }
-          if (!variables.etiquette) {
-            delete variables.etiquette
+          if (this.form.enfant.prenom !== this.equipe.enfant.prenom) {
+            if (!variables.enfant) variables.enfant = {}
+            variables.enfant.prenom = this.form.enfant.prenom
           }
-          if (this.form.imageUrl) {
-            variables.avatar = await this.srcToFile(this.form.imageUrl, `${this.form.nom}.jpg`, 'image/jpeg')
+          if (parseInt(this.form.enfant.annee) !== parseInt(this.equipe.enfant.annee)) {
+            if (!variables.enfant) variables.enfant = {}
+            variables.enfant.annee = parseInt(this.form.enfant.annee)
           }
-          if (this.form.adulte.imageUrl) {
-            if (!variables.adulte) {
-              variables.adulte = {}
-            }
-            variables.adulte.avatar = await this.srcToFile(this.form.adulte.imageUrl, `${this.form.adulte.nom}_${this.form.adulte.prenom}.jpg`, 'image/jpeg')
+          if (this.form.enfant.genre !== this.equipe.enfant.genre) {
+            if (!variables.enfant) variables.enfant = {}
+            variables.enfant.genre = this.form.enfant.genre
           }
-          if (this.form.enfant.imageUrl) {
-            if (!variables.enfant) {
-              variables.enfant = {}
-            }
-            variables.enfant.avatar = await this.srcToFile(this.form.enfant.imageUrl, `${this.form.enfant.nom}_${this.form.enfant.prenom}.jpg`, 'image/jpeg')
+          if (this.form.adulte.nom !== this.equipe.adulte.nom) {
+            if (!variables.adulte) variables.adulte = {}
+            variables.adulte.nom = this.form.adulte.nom
           }
-          await this.$store.dispatch('competition/createTeam', variables)
-          this.$router.push(`/competition/${this.$route.params.competition}`)
-        } catch (error) {
-          // console.log(error)
-          this.setError(error)
+          if (this.form.adulte.prenom !== this.equipe.adulte.prenom) {
+            if (!variables.adulte) variables.adulte = {}
+            variables.adulte.prenom = this.form.adulte.prenom
+          }
+          if (parseInt(this.form.adulte.annee) !== parseInt(this.equipe.adulte.annee)) {
+            if (!variables.adulte) variables.adulte = {}
+            variables.adulte.annee = parseInt(this.form.adulte.annee)
+          }
+          if (this.form.adulte.genre !== this.equipe.adulte.genre) {
+            if (!variables.adulte) variables.adulte = {}
+            variables.adulte.genre = this.form.adulte.genre
+          }
+        } else {
+          variables = {
+            nom: this.form.nom,
+            competition: this.$route.params.competition,
+            etiquette: this.form.etiquette,
+            adulte: {
+              nom: this.form.adulte.nom,
+              prenom: this.form.adulte.prenom,
+              annee: parseInt(this.form.adulte.annee),
+              genre: this.form.adulte.genre
+            },
+            enfant: {
+              nom: this.form.enfant.nom,
+              prenom: this.form.enfant.prenom,
+              annee: parseInt(this.form.enfant.annee),
+              genre: this.form.enfant.genre
+            },
+            statut: this.form.statut
+          }
+          if (this.form.pwd) variables.pwd = this.form.pwd
         }
+        if (!variables.etiquette) delete variables.etiquette
+        if (this.form.imageUrl && this.form.imageUrl.indexOf('http') < 0) {
+          variables.avatar = await this.srcToFile(this.form.imageUrl, `${this.form.nom}.jpg`, 'image/jpeg')
+        }
+        if (this.form.adulte.imageUrl) {
+          if (!variables.adulte) variables.adulte = {}
+          variables.adulte.avatar = await this.srcToFile(this.form.adulte.imageUrl, `${this.form.adulte.nom}_${this.form.adulte.prenom}.jpg`, 'image/jpeg')
+        }
+        if (this.form.enfant.imageUrl) {
+          if (!variables.enfant) variables.enfant = {}
+          variables.enfant.avatar = await this.srcToFile(this.form.enfant.imageUrl, `${this.form.enfant.nom}_${this.form.enfant.prenom}.jpg`, 'image/jpeg')
+        }
+        if (this.equipe.id) {
+          await this.$store.dispatch('competition/updateTeam', variables)
+        } else {
+          await this.$store.dispatch('competition/createTeam', variables)
+        }
+        this.$router.push(`/competition/${this.$route.params.competition}`)
       }
     },
     srcToFile (src, fileName, mimeType) {
@@ -258,18 +227,16 @@ export default {
         enfant: {
           nom: this.equipe.enfant.nom,
           prenom: this.equipe.enfant.prenom,
-          dateNaissance: this.equipe.enfant.dateNaissance,
-          categorie: {
-            genre: this.equipe.enfant.categorie.genre
-          }
+          annee: this.equipe.enfant.annee,
+          genre: this.equipe.enfant.categorie.genre,
+          avatar: this.equipe.enfant.avatar
         },
         adulte: {
           nom: this.equipe.adulte.nom,
           prenom: this.equipe.adulte.prenom,
-          dateNaissance: this.equipe.adulte.dateNaissance,
-          categorie: {
-            genre: this.equipe.adulte.categorie.genre
-          }
+          annee: this.equipe.adulte.annee,
+          genre: this.equipe.adulte.categorie.genre,
+          avatar: this.equipe.adulte.avatar
         },
         pwd: '',
         imageUrl: (this.equipe.avatar) ? `${process.env.VUE_APP_IMAGE}/${this.equipe.avatar}` : null

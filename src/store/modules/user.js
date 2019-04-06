@@ -1,4 +1,4 @@
-import { filter } from 'lodash'
+import { filter, findIndex } from 'lodash'
 import apolloClient from '@/apollo'
 
 const state = {
@@ -55,6 +55,17 @@ const actions = {
     } catch (error) {
       commit('main/SET_ERROR', error, { root: true })
     }
+  },
+  nouveauUser ({ commit, state }, payload) {
+    commit('SET_ALL', [...state.all, payload])
+  },
+  modificationUser ({ commit, state }, payload) {
+    const ind = findIndex(state.all, { id: payload.id })
+    commit('SET_ALL', [
+      ...state.all.slice(0, ind),
+      payload,
+      ...state.all.slice(ind + 1)
+    ])
   }
 }
 

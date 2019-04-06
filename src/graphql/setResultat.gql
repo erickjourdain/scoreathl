@@ -7,18 +7,21 @@ mutation setResultat (
     resultat: $resultat
   ) {
     id
-    score {
-      id
+    points
+    scores {
       points
-      resultats {
+      statut
+      marques
+      challenge {
+        id
+        essais
         epreuve {
           id
           nom
           unitePrincipale
+          uniteSecondaire
+          erreur
         }
-        resultat
-        score
-        statut
       }
     }
   }

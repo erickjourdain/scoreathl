@@ -7,7 +7,7 @@
         </span>
         <br/>
         <span>
-          {{ $moment(athlete.dateNaissance).format('DD/MM/YYYY') }}
+          {{ athlete.categorie.nom }} - {{ athlete.annee }}
         </span>
       </v-flex>
       <v-flex xs4 class="text-xs-right">
@@ -24,13 +24,14 @@
         <v-chip color="primary" dark>{{ points }}</v-chip>
       </v-flex>
     </v-layout>
-    <div v-for="resultat of athlete.score.resultats" :key="resultat.id">
-      <resultat-ligne-equipe-card :resultat="resultat" v-on:def-score="defScore"/>
+    <div v-for="score of scores" :key="score.id">
+      <resultat-ligne-equipe-card :score="score" v-on:def-score="defScore"/>
     </div>
   </div>
 </template>
 
 <script>
+import { orderBy } from 'lodash'
 import ResultatLigneEquipeCard from '@/components/ResultatLigneEquipeCard'
 
 export default {
@@ -44,13 +45,16 @@ export default {
   },
   computed: {
     points () {
-      return (this.athlete.score.points >= 1) ? `${this.athlete.score.points} pts` : `${this.athlete.score.points} pt`
+      return (this.athlete.points >= 1) ? `${this.athlete.points} pts` : `${this.athlete.points} pt`
+    },
+    scores () {
+      return orderBy(this.athlete.scores, s => { return s.challenge.epreuve.nom }, 'asc')
     }
   },
   methods: {
-    defScore (resultat) {
+    defScore (score) {
       this.$store.commit('competition/SET_ATHLETE', this.athlete)
-      this.$store.dispatch('competition/setEpreuve', { id: resultat.epreuve.id })
+      this.$store.dispatch('competition/setChallenge', { id: score.challenge.id })
       this.$router.push(`/competition/${this.$route.params.competition}/definir_score`)
     }
   }

@@ -25,7 +25,7 @@ export default {
   props: [ 'athlete' ],
   computed: {
     points () {
-      return (this.athlete.score.points > 1) ? `${this.athlete.score.points} pts` : `${this.athlete.score.points} pt`
+      return (this.athlete.points > 1) ? `${this.athlete.points} pts` : `${this.athlete.points} pt`
     },
     avatar () {
       return `${process.env.VUE_APP_IMAGE}/${this.athlete.avatar}`

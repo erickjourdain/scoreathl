@@ -1,13 +1,8 @@
 <template>
   <v-layout row align-center>
     <v-flex xs12 sm6>
-      <v-autocomplete
-        v-model="athlete"
-        :items="athletes" item-text="nom" item-value="id"
-        label="sélectionner athlète"
-        persistent-hint
-        @input="setAthlete"
-      >
+      <v-autocomplete v-model="athlete" :items="athletes" item-text="nom" item-value="id"
+        label="sélectionner athlète" persistent-hint @input="setAthlete" >
         <template slot="selection" slot-scope="data">
           <v-chip :selected="data.selected">
             <athlete-avatar :avatar="data.item.avatar" />
@@ -26,16 +21,9 @@
       </v-autocomplete>
     </v-flex>
     <v-flex xs12 sm6>
-      <v-autocomplete
-        v-model="epreuve"
-        :items="epreuves"
-        item-text="nom"
-        item-value="id"
-        chips
-        label="sélectionner épreuve"
-        persistent-hint
-        @input="setEpreuve"
-      >
+      <v-autocomplete v-model="epreuve" :items="epreuves" item-text="epreuve.nom"
+        item-value="id" chips label="sélectionner épreuve" persistent-hint
+        @input="setEpreuve" >
       </v-autocomplete>
     </v-flex>
   </v-layout>
@@ -62,8 +50,8 @@ export default {
     ...mapGetters('competition', {
       athletes: 'listAthletes'
     }),
-    ...mapGetters('epreuve', {
-      epreuves: 'listEpreuves'
+    ...mapGetters('competition', {
+      epreuves: 'listChallenges'
     })
   },
   methods: {
@@ -71,7 +59,7 @@ export default {
       this.$store.dispatch('competition/setAthlete', { id: this.athlete })
     },
     setEpreuve () {
-      this.$store.commit('competition/SET_EPREUVE', find(this.epreuves, { id: this.epreuve }))
+      this.$store.commit('competition/SET_CHALLENGE', find(this.epreuves, { id: this.epreuve }))
     }
   },
   watch: {

@@ -4,6 +4,7 @@ query getEpreuves {
     nom
     unitePrincipale
     uniteSecondaire
+    maxEssais
     erreur
   }
 }

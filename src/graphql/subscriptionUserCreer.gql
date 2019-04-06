@@ -1,0 +1,9 @@
+subscription nouveauUser {
+    nouveauUser {
+      id
+      nom
+      role
+      avatar
+      service
+  }
+}

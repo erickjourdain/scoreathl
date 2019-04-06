@@ -66,7 +66,7 @@
             </v-list-tile-action>
           </v-list-tile>
         </router-link>
-
+<!--
         <router-link :to="`/competition/${currentCompetition.id}/definir_score`" v-if="organisateur || isAdmin || isJuge">
           <v-list-tile>
             <v-list-tile-title>enregistrer score</v-list-tile-title>
@@ -75,7 +75,7 @@
             </v-list-tile-action>
           </v-list-tile>
         </router-link>
-
+-->
         <router-link :to="`/competition/${currentCompetition.id}/creer_equipe`" v-if="currentCompetition.statut && user && user.id">
           <v-list-tile>
             <v-list-tile-title>créer équipe</v-list-tile-title>

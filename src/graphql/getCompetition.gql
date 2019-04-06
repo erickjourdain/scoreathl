@@ -10,15 +10,17 @@ query getCompetition($id: ID!) {
       id
       nom
     }
-    juges {
-      user {
+    challenges {
+      id
+      epreuve {
         id
         nom
+        maxEssais
+        unitePrincipale
+        erreur
       }
-      epreuves {
-        id
-        nom
-      }
+      essais
+      statut
     }
     equipes {
       id
@@ -32,22 +34,28 @@ query getCompetition($id: ID!) {
         id
         nom
         prenom
+        annee
+        points
         categorie {
           id
           nom
+          genre
         }
         avatar
-        score {
+        scores {
           points
-          resultats {
+          statut
+          marques
+          challenge {
+            id
+            essais
             epreuve {
               id
               nom
               unitePrincipale
+              uniteSecondaire
+              erreur
             }
-            resultat
-            score
-            statut
           }
         }
       }
@@ -55,22 +63,28 @@ query getCompetition($id: ID!) {
         id
         nom
         prenom
+        annee
+        points
         categorie {
           id
           nom
+          genre
         }
         avatar
-        score {
+        scores {
           points
-          resultats {
+          statut
+          marques
+          challenge {
+            id
+            essais
             epreuve {
               id
               nom
               unitePrincipale
+              uniteSecondaire
+              erreur
             }
-            resultat
-            score
-            statut
           }
         }
       }

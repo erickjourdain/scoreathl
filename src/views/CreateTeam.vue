@@ -29,7 +29,7 @@ export default {
           categorie: {
             genre: 'M'
           },
-          dateNaissance: '2006-02-01',
+          annee: 2006,
           imageUrl: ''
         },
         adulte: {
@@ -38,7 +38,7 @@ export default {
           categorie: {
             genre: 'M'
           },
-          dateNaissance: '1987-02-01',
+          annee: 1987,
           imageUrl: ''
         }
       }

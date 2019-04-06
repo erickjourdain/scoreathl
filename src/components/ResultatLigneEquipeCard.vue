@@ -2,10 +2,10 @@
   <v-layout row>
     <v-flex xs2 sm1>
       <v-icon v-if="isUserCompetitionJuge" class="pointer" color="secondary"
-        @click="$emit('def-score', resultat)">mdi-timer</v-icon>
+        @click="$emit('def-score', score)">mdi-timer</v-icon>
     </v-flex>
     <v-flex xs4>
-      {{ resultat.epreuve.nom }}
+      {{ score.challenge.epreuve.nom }}
     </v-flex>
     <v-flex xs3 class="text-xs-center">
       {{ points }}
@@ -22,7 +22,7 @@ import { max, find } from 'lodash'
 
 export default {
   name: 'ResultatLigneEquipeCard',
-  props: [ 'resultat' ],
+  props: [ 'score' ],
   computed: {
     ...mapState('main', {
       currentUser: 'currentUser'
@@ -30,19 +30,19 @@ export default {
     ...mapGetters('main', {
       isAdmin: 'isAdmin'
     }),
+    ...mapState('competition', {
+      equipe: 'team'
+    }),
     ...mapGetters('competition', {
       organisateur: 'organisateur',
       juges: 'juges'
     }),
     points () {
-      return (this.resultat.score >= 1) ? `${this.resultat.score} pts` : `${this.resultat.score} pt`
+      return (this.score.points >= 1) ? `${this.score.points} pts` : `${this.score.points} pt`
     },
     displayResultat () {
-      if (!this.resultat.resultat.length) {
-        return '-'
-      }
-      let res = max(this.resultat.resultat)
-      switch (this.resultat.epreuve.unitePrincipale) {
+      let res = max(this.score.marques)
+      switch (this.score.challenge.epreuve.unitePrincipale) {
         case 'sec':
           res = (res) ? res.toString().replace('.', '\'\'') : '0\'\'00'
           break
@@ -56,11 +56,14 @@ export default {
       return res
     },
     isUserCompetitionJuge () {
+      if (!this.equipe || !this.equipe.statut) {
+        return false
+      }
       if (this.isAdmin || this.organisateur) {
         return true
       }
       return find(this.juges, juge => {
-        return (find(juge.epreuves, { id: this.resultat.epreuve.id }) && juge.user.id === this.currentUser.id)
+        return (find(juge.epreuves, { id: this.score.challenge.epreuve.id }) && juge.user.id === this.currentUser.id)
       })
     }
   }

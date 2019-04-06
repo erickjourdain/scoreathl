@@ -24,6 +24,25 @@
     <v-text-field type="password" v-model="confirmedPassword"
       :rules="confirmedPwdRules" label="confirmer mot de passe" >
     </v-text-field>
+    <v-layout row>
+      <v-flex xs6>
+        <span class="headline">Epreuve</span>
+      </v-flex>
+      <v-flex xs6>
+        <span class="headline">Nombre d'essais</span>
+      </v-flex>
+    </v-layout>
+    <v-layout row v-for="challenge in challenges" :key="challenge.epreuve.id">
+      <v-flex xs6>
+        <v-checkbox v-model="challenge.statut" :label="`${challenge.epreuve.nom}`"></v-checkbox>
+      </v-flex>
+        <v-flex xs6>
+        <v-radio-group v-model="challenge.essais" row>
+          <v-radio v-for="(essai, ind) in challenge.epreuve.maxEssais" :key="ind" :label="`${ind + 1}`"
+            :value="ind + 1" :disabled="!challenge.statut"></v-radio>
+        </v-radio-group>
+      </v-flex>
+    </v-layout>
     <v-btn :loading="loading" :disabled="!valid || loading"
       @click="submit" >
       {{ btnText }}
@@ -43,6 +62,7 @@ export default {
   props: [ 'competition' ],
   data () {
     return {
+      nbChallenges: 5,
       loading: false,
       valid: false,
       menu: false,
@@ -54,6 +74,7 @@ export default {
       organisateurs: this.competition.organisateurs,
       statut: this.competition.statut,
       pwd: null,
+      challenges: Object.assign({}, this.competition.challenges),
       confirmedPassword: null,
       nomRules: [
         v => !!v || 'Le nom est obligatoire',
@@ -130,6 +151,18 @@ export default {
           if (this.pwd) {
             variables.pwd = this.pwd
           }
+          variables.organisateurs = []
+          Object.keys(this.organisateurs).forEach(key => {
+            variables.organisateurs.push(this.organisateurs[key].id)
+          })
+          variables.challenges = []
+          Object.keys(this.challenges).forEach(key => {
+            variables.challenges.push({
+              epreuve: this.challenges[key].epreuve.id,
+              essais: this.challenges[key].essais,
+              statut: this.challenges[key].statut
+            })
+          })
         } else {
           variables = {
             nom: this.nom,
@@ -139,6 +172,14 @@ export default {
             statut: this.statut,
             pwd: this.pwd
           }
+          variables.challenges = []
+          Object.keys(this.challenges).forEach(key => {
+            variables.challenges.push({
+              epreuve: this.challenges[key].epreuve.id,
+              essais: this.challenges[key].essais,
+              statut: this.challenges[key].statut
+            })
+          })
         }
         if (this.image) {
           variables.image = this.image

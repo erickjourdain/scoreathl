@@ -13,6 +13,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
+import apolloClient from '@/apollo'
 import Error from '@/components/Error'
 import SnackInfo from '@/components/SnackInfo'
 import Navbar from '@/components/Navbar'
@@ -26,7 +27,8 @@ export default {
   },
   data () {
     return {
-      error: null
+      error: null,
+      observers: {}
     }
   },
   computed: {
@@ -100,17 +102,40 @@ export default {
     await this.$store.dispatch('categorie/getCategories')
     await this.$store.dispatch('epreuve/getEpreuves')
     await this.$store.dispatch('etiquette/getEtiquettes')
+    const store = this.$store
+    apolloClient.subscribe({
+      query: require('@/graphql/subscriptionUserCreer.gql')
+    }).subscribe({
+      next (data) {
+        store.dispatch('user/nouveauUser', data.data.nouveauUser)
+      },
+      error (error) {
+        store.commit('main/SET_ERROR', error)
+      }
+    })
+    apolloClient.subscribe({
+      query: require('@/graphql/subscriptionUserModif.gql')
+    }).subscribe({
+      next (data) {
+        store.dispatch('user/modificationUser', data.data.modificationUser)
+      },
+      error (error) {
+        store.commit('main/SET_ERROR', error)
+      }
+    })
   },
   async mounted () {
     try {
+      /*
       await this.loadFbSdk(process.env.VUE_APP_FACEBOOK_CLIENTID, 'v3.2')
-      await this.loadapi('https://apis.google.com/js/api.js')
+      await this.loadapi('https://apis.google.com/js/plateform.js')
       await this.initGoogleapi({
         clientId: process.env.VUE_APP_GOOGLE_CLIENTID,
         scope: process.env.VUE_APP_GOOGLE_SCOPE,
         discoveryDocs: [process.env.VUE_APP_GOOGLE_DISCOVERYDOCS]
       })
       this.setFBLogin({ value: true })
+      */
     } catch (error) {
       this.setError(error)
     }

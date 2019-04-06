@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="score && score.athlete && score.epreuve">
+  <v-card v-if="score && score.athlete && score.challenge">
     <v-card-title primary-title>
       <v-flex xs2 class="text-xs-center">
         <v-avatar color="primary" size="75">
@@ -20,10 +20,10 @@
     <v-card-text>
       <v-layout>
         <v-flex xs12 class="text-xs-center headline primary--text" mb-3>
-          <span class="text-uppercase">{{ score.epreuve.nom }}</span> - {{ points }} pt
+          <span class="text-uppercase">{{ score.challenge.epreuve.nom }}</span> - {{ points }} pt
         </v-flex>
       </v-layout>
-      <epreuve-try v-for="n in score.epreuve.essais" :key="n" :index="n"
+      <epreuve-try v-for="n in score.challenge.essais" :key="n" :index="n"
         :initScore="score" :initRes="resultats" v-on:new-score="newScore" />
     </v-card-text>
     <v-card-actions>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { orderBy, sortedIndex, max } from 'lodash'
+import { orderBy, sortedIndex, max, find } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 import EpreuveTry from '@/components/EpreuveTry'
 
@@ -51,13 +51,14 @@ export default {
   computed: {
     ...mapState('competition', {
       score: 'score',
-      updatescore: 'updateScore'
+      updatescore: 'updateScore',
+      competition: 'current'
     }),
     ...mapGetters('competition', {
       resultats: 'resultats'
     }),
     notations () {
-      return this.$store.getters['categorie/getNotations'](this.score.athlete.categorie.id, this.score.epreuve.id)
+      return this.$store.getters['categorie/getNotations'](this.score.athlete.categorie.id, this.score.challenge.epreuve.id)
     },
     disable () {
       return (!this.updatescore || this.saving)
@@ -66,13 +67,13 @@ export default {
   watch: {
     resultats (val) {
       if (val) {
-        this.res = val.resultat
+        this.res = val.marques
         this.points = val.score
       }
     }
   },
   mounted () {
-    this.res = (this.resultats) ? this.resultats.resultat : null
+    this.res = (this.resultats) ? this.resultats.marques : null
     this.points = (this.resultats) ? this.resultats.points : null
   },
   methods: {
@@ -84,20 +85,25 @@ export default {
         this.points = 0
         return
       }
-      this.points = (this.score.epreuve.unitePrincipale === 'm') ? sortedIndex(orderBy(this.notations.points, [], 'asc'), res) + 1
+      this.points = (this.score.challenge.epreuve.unitePrincipale === 'm') ? sortedIndex(orderBy(this.notations.points, [], 'asc'), res) + 1
         : 40 - sortedIndex(orderBy(this.notations.points, [], 'asc'), res)
     },
     async onSave () {
       this.saving = true
-      try {
+      await this.$store.dispatch('competition/saveScore', { res: this.res })
+      if (this.score.challenge.epreuve.nom === 'relais') {
+        const equipe = find(this.competition.equipes, e => {
+          return (e.adulte.id === this.score.athlete.id || e.enfant.id === this.score.athlete.id)
+        })
+        const athlete = (this.score.athlete.id === equipe.adulte.id) ? equipe.enfant : equipe.adulte
+        this.$store.commit('competition/SET_ATHLETE', athlete)
         await this.$store.dispatch('competition/saveScore', { res: this.res })
-        this.saving = false
-        this.$store.dispatch('main/setSnackbar', { visible: true, color: 'success', text: 'le score a été mis à jour!' })
-        this.$store.commit('competition/SET_EPREUVE', null)
-        this.$store.commit('competition/SET_ATHLETE', null)
-      } catch (error) {
-        // console.log(error)
       }
+      this.saving = false
+      this.$store.dispatch('main/setSnackbar', { visible: true, color: 'success', text: 'le score a été mis à jour!' })
+      this.$store.commit('competition/SET_CHALLENGE', null)
+      this.$store.commit('competition/SET_ATHLETE', null)
+      this.$router.go(-1)
     }
   }
 }

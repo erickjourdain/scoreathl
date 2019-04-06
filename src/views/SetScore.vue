@@ -2,9 +2,9 @@
   <v-layout align-center justify-center row>
     <v-flex xs12 md10 lg8>
       <score-choice />
-      <score-card v-if="score && score.athlete && score.epreuve"/>
+      <score-card v-if="score && score.athlete && score.challenge"/>
       <span v-else class="headline">
-        Sélectionner un athlèete et une épreuve
+        Sélectionner un athlète et une épreuve
       </span>
     </v-flex>
   </v-layout>

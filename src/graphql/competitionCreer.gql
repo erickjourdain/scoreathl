@@ -5,7 +5,8 @@ mutation CompetitionCreer (
   $pwd: String!,
   $organisateurs: [ID!]!,
   $statut: Boolean!,
-  $image: Upload
+  $image: Upload,
+  $challenges: [ChallengeInput!]!
   ) {
 	creerCompetition (
     nom: $nom,
@@ -14,7 +15,8 @@ mutation CompetitionCreer (
     pwd: $pwd,
     organisateurs: $organisateurs,
     statut: $statut,
-    image: $image) {
+    image: $image,
+    challenges: $challenges) {
       id
       nom
       date

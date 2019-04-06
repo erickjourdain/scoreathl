@@ -1,22 +1,22 @@
 <template>
   <v-layout row wrap align-center>
     <v-flex xs3 class="text-xs-left title secondary--text">
-      <span v-if="score.epreuve.essais > 1">
+      <span v-if="score.challenge.essais > 1">
         Essai n° {{ index }} :
       </span>
     </v-flex>
     <v-flex xs3 lass="text-xs-left title secondary--text">
-      <v-currency-field :value="res" v-model="res" :suffix="score.epreuve.unitePrincipale" @change="changeInput"/>
+      <v-currency-field :value="res" v-model="res" :suffix="score.challenge.epreuve.unitePrincipale" @change="changeInput"/>
     </v-flex>
     <v-flex xs3 md2 offset-md3 class="text-xs-right">
-      <v-checkbox :label="score.epreuve.erreur" v-model="checkbox" @change="checkboxChange"></v-checkbox>
+      <v-checkbox :label="score.challenge.epreuve.erreur" v-model="checkbox" @change="checkboxChange"></v-checkbox>
     </v-flex>
     <v-flex xs12 sm6>
-      <v-slider v-model="main" :max="maxPrincipal" :label="score.epreuve.unitePrincipale" @change="resChange"
+      <v-slider v-model="main" :max="maxPrincipal" :label="score.challenge.epreuve.unitePrincipale" @change="resChange"
         thumb-label="always" inverse-label color="accent" thumb-color="accent" :disabled="disabled"/>
     </v-flex>
     <v-flex xs12 sm6>
-      <v-slider v-model="secondary" :max="maxSecondary" :label="score.epreuve.uniteSecondaire" @change="resChange"
+      <v-slider v-model="secondary" :max="maxSecondary" :label="score.challenge.epreuve.uniteSecondaire" @change="resChange"
         thumb-label="always" inverse-label color="accent" thumb-color="accent" :disabled="disabled"/>
     </v-flex>
   </v-layout>
@@ -33,12 +33,12 @@ export default {
   components: { VCurrencyField },
   data () {
     return {
-      res: this.initRes.resultat[this.index - 1],
-      main: Math.floor(this.initRes.resultat[this.index - 1]),
-      secondary: Math.floor((this.initRes.resultat[this.index - 1] - Math.floor(this.initRes.resultat[this.index - 1])) * 100),
-      checkbox: this.initRes.resultat[this.index - 1] < 0,
-      disabled: this.initRes.resultat[this.index - 1] < 0,
-      maxSecondary: (this.initScore.epreuve.unitePrincipale === 'min') ? 59 : 99
+      res: this.initRes.marques[this.index - 1],
+      main: Math.floor(this.initRes.marques[this.index - 1]),
+      secondary: Math.floor((this.initRes.marques[this.index - 1] - Math.floor(this.initRes.marques[this.index - 1])) * 100),
+      checkbox: this.initRes.marques[this.index - 1] < 0,
+      disabled: this.initRes.marques[this.index - 1] < 0,
+      maxSecondary: (this.initScore.challenge.epreuve.unitePrincipale === 'min') ? 59 : 99
     }
   },
   computed: {
@@ -52,19 +52,19 @@ export default {
       return Math.floor(max(this.notations.points) * 1.1)
     },
     notations () {
-      return this.$store.getters['categorie/getNotations'](this.score.athlete.categorie.id, this.score.epreuve.id)
+      return this.$store.getters['categorie/getNotations'](this.score.athlete.categorie.id, this.score.challenge.epreuve.id)
     }
   },
   watch: {
     score (val) {
-      this.maxSecondary = (val.epreuve.unitePrincipale === 'min') ? 59 : 99
+      this.maxSecondary = (val.challenge.epreuve.unitePrincipale === 'min') ? 59 : 99
     },
     resultats (val) {
-      this.res = val.resultat[this.index - 1]
-      this.main = Math.floor(val.resultat[this.index - 1])
-      this.secondary = Math.floor((val.resultat[this.index - 1] - Math.floor(val.resultat[this.index - 1])) * 100)
-      this.checkbox = val.resultat[this.index - 1] < 0
-      this.disabled = val.resultat[this.index - 1] < 0
+      this.res = val.marques[this.index - 1]
+      this.main = Math.floor(val.marques[this.index - 1])
+      this.secondary = Math.floor((val.marques[this.index - 1] - Math.floor(val.marques[this.index - 1])) * 100)
+      this.checkbox = val.marques[this.index - 1] < 0
+      this.disabled = val.marques[this.index - 1] < 0
     }
   },
   methods: {

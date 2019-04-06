@@ -92,10 +92,13 @@ export default {
   methods: {
     async submit () {
       if (this.$refs.signinForm.validate()) {
-        await this.$store.dispatch('main/createUser', { nom: this.nom, email: this.email, password: this.pwd, avatar: this.imageUrl })
-        if (!this.error) {
-          this.$router.push('/')
-        }
+        await this.$store.dispatch('main/createUser', {
+          nom: this.nom,
+          email: this.email,
+          password: this.pwd,
+          avatar: (this.imageUrl) ? await this.srcToFile(this.imageUrl, `${this.nom}.jpg`, 'image/jpeg') : ''
+        })
+        this.$router.push('/')
       }
     },
     clear () {
@@ -112,6 +115,12 @@ export default {
     },
     setImage (e) {
       this.imageUrl = e.image
+    },
+    srcToFile (src, fileName, mimeType) {
+      return (fetch(src)
+        .then(res => res.arrayBuffer())
+        .then(buf => new File([buf], fileName, { type: mimeType }))
+      )
     },
     closeDialog () {
       this.dialog = false

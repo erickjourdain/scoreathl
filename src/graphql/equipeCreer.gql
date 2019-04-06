@@ -34,17 +34,18 @@ mutation EquipeCreer (
           nom
         }
         avatar
-        score {
-          points
-          resultats {
+        points
+        scores {
+          challenge {
+            id
             epreuve {
               id
               nom
-              unitePrincipale
             }
-            resultat
-            score
           }
+          marques
+          points
+          statut
         }
       }
       enfant {
@@ -56,17 +57,18 @@ mutation EquipeCreer (
           nom
         }
         avatar
-        score {
-          points
-          resultats {
+        points
+        scores {
+          challenge {
+            id
             epreuve {
               id
               nom
-              unitePrincipale
             }
-            resultat
-            score
           }
+          marques
+          points
+          statut
         }
       }
       statut

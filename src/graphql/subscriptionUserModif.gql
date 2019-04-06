@@ -1,0 +1,9 @@
+subscription modificationUser {
+    modificationUser {
+      id
+      nom
+      role
+      avatar
+      service
+  }
+}

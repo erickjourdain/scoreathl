@@ -1,5 +1,5 @@
-query getEquipe($id: ID!) {
-  equipe(id: $id) {
+query getEquipe ($id: ID!) {
+  equipe (id: $id) {
     id
     nom
     avatar
@@ -14,23 +14,24 @@ query getEquipe($id: ID!) {
       prenom
       nom
       avatar
-      dateNaissance
-      score {
+      annee
+      points
+      scores {
         id
         points
-        resultats {
+        marques
+        statut
+        challenge {
+          id
           epreuve {
             id
             nom
             unitePrincipale
-            uniteSecondaire
           }
-          resultat
-          score
-          statut
         }
       }
       categorie {
+        id
         nom
         genre
       }
@@ -40,27 +41,28 @@ query getEquipe($id: ID!) {
       prenom
       nom
       avatar
-      dateNaissance
+      annee
+      points
       categorie {
         id
         nom
       }
-      score {
+      scores {
         id
         points
-        resultats {
+        marques
+        statut
+        challenge {
+          id
           epreuve {
             id
             nom
             unitePrincipale
-            uniteSecondaire
           }
-          resultat
-          score
-          statut
         }
       }
       categorie {
+        id
         nom
         genre
       }

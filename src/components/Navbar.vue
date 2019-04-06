@@ -25,7 +25,7 @@
         <v-tooltip bottom>
           <v-btn icon slot="activator">
             <v-avatar size="32px">
-              <img :src="currentUser.avatar" alt="avatar" v-if="currentUser.avatar">
+              <img :src="avatar" alt="avatar" v-if="currentUser.avatar">
               <v-icon v-else>mdi-account-circle</v-icon>
             </v-avatar>
           </v-btn>
@@ -51,13 +51,21 @@ export default {
   components: { NavDrawer },
   data () {
     return {
-      drawer: false
+      drawer: false,
+      env: process.env.VUE_APP_IMAGE
     }
   },
   computed: {
     ...mapState('main', {
       currentUser: 'currentUser'
-    })
+    }),
+    avatar () {
+      if (this.currentUser.avatar.indexOf('http') < 0) {
+        return `${this.env}/${this.currentUser.avatar}`
+      } else {
+        return this.currentUser.avatar
+      }
+    }
   },
   methods: {
     ...mapMutations('main', {

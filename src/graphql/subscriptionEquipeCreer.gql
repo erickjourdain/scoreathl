@@ -1,0 +1,10 @@
+subscription nouvelleEquipe (
+    $competition: ID!
+  ) {
+    nouvelleEquipe (
+      competition: $competition
+    ) {
+      competition
+      equipe
+  }
+}

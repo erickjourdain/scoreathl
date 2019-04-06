@@ -27,15 +27,9 @@
         </v-select>
       </v-flex>
       <v-flex xs12 sm6>
-        <v-menu :close-on-content-click="false" v-model="menu" :nudge-right="40" lazy
-          transition="scale-transition" offset-y full-width min-width="290px" >
-          <v-text-field slot="activator" v-model="computedDateFormatted" label="date de naissance"
-            prepend-icon="mdi-calendar" readonly >
-          </v-text-field>
-          <v-date-picker v-model="date" @input="menu = false" locale="fr-fr" :allowed-dates="allowedDates"
-            @change="$emit('athleteChange', { type, field: 'dateNaissance', value: date })" :disabled="valide" >
-          </v-date-picker>
-        </v-menu>
+        <v-text-field v-model="annee" :rules="anneeRules" label="année naissance" :readonly="valide"
+          @input="$emit('athleteChange', { type, field: 'annee', value: annee })" type="number" required >
+        </v-text-field>
       </v-flex>
     </v-layout>
     <picture-dialog :dialog="dialog" @close="closeDialog" @setImage="setImage" />
@@ -56,7 +50,7 @@ export default {
       nom: this.athlete.nom,
       prenom: this.athlete.prenom,
       genre: this.athlete.genre,
-      date: this.$moment(this.athlete.dateNaissance).format('YYYY-MM-DD'),
+      annee: this.athlete.annee,
       imageUrl: (this.athlete.avatar) ? `${process.env.VUE_APP_IMAGE}/${this.athlete.avatar}` : null,
       nomRules: [
         v => !!v || 'Le nom est obligatoire',
@@ -65,24 +59,18 @@ export default {
       prenomRules: [
         v => !!v || 'Le prénom est obligatoire',
         v => (v && v.length >= 3) || 'Le nom doit comporter au moins 3 caractères'
+      ],
+      anneeRules: [
+        v => !!v || `L'année de naissance est obligatoire`,
+        v => (v && parseInt(v) <= 2015) || 'Un peu jeune nom?',
+        v => (v && parseInt(v) > 1930) || 'Quelles artères!'
       ]
-    }
-  },
-  computed: {
-    computedDateFormatted () {
-      return this.formattedDate(this.date)
     }
   },
   methods: {
     setImage (e) {
       this.imageUrl = e.image
       this.$emit('athleteChange', { type: this.type, field: 'imageUrl', value: this.imageUrl })
-    },
-    formattedDate (value) {
-      return this.$moment(value).format('DD/MM/YYYY')
-    },
-    allowedDates (val) {
-      return this.$moment(val).isAfter('1950-01-01') && this.$moment(val).isBefore('2013-01-01')
     },
     closeDialog () {
       this.dialog = false

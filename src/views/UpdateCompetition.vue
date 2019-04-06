@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-flex xs12 md6 lg4>
+    <v-flex xs12 md8 lg6>
       <span class="headline">
         Modifier
       </span>

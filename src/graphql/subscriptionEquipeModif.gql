@@ -1,0 +1,10 @@
+subscription modificationEquipe (
+    $competition: ID!
+  ) {
+    modificationEquipe (
+      competition: $competition
+    ) {
+      competition
+      equipe
+  }
+}
