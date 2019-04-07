@@ -3,8 +3,11 @@ import { createUploadLink } from 'apollo-upload-client'
 import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { WebSocketLink } from 'apollo-link-ws'
+import { onError } from 'apollo-link-error'
 import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
+
+import store from './store'
 
 const wsLink = new WebSocketLink({
   uri: process.env.VUE_APP_GRAPHQL_WS || 'ws://localhost:4000/graphql',
@@ -26,6 +29,19 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+const ErrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log('erreur')
+    let messages = ''
+    graphQLErrors.map(({ message }) => {
+      messages = `${messages}<br>${message}`
+    })
+    store.dispatch('main/setSnackbar', { visible: true, text: messages, color: 'error' })
+  }
+  if (networkError) store.dispatch('main/setSnackbar', { visible: true, text: networkError, color: 'error' })
+  // console.log(`[Network error]: ${networkError}`)
+})
+
 const link = split(
   // split based on operation type
   ({ query }) => {
@@ -33,7 +49,8 @@ const link = split(
     return kind === 'OperationDefinition' && operation === 'subscription'
   },
   wsLink,
-  authLink.concat(createUploadLink({ uri: httpEndpoint }))
+  authLink.concat(createUploadLink({ uri: httpEndpoint })),
+  ErrorLink
 )
 
 const client = new ApolloClient({

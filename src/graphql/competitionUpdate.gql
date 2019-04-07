@@ -5,7 +5,7 @@ mutation CompetitionUpdata (
   $date: Date,
   $pwd: String,
   $organisateurs: [ID!],
-  $challenges: [ChallengeInput!]!,
+  $challenges: [ChallengeInput!],
   $statut: Boolean,
   $image: Upload
   ) {

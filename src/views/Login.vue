@@ -80,6 +80,24 @@ export default {
     async handleGoogleClickSignIn (e) {
       e.preventDefault()
       try {
+        window.gapi.auth2.getAuthInstance().signIn().then(async (googleUser) => {
+          if (!googleUser || !googleUser.getAuthResponse() || !googleUser.getAuthResponse().access_token) {
+            throw new Error('Impossible de se connecter avec le service google')
+          }
+          await this.$store.dispatch('main/logGoogle', { token: googleUser.getAuthResponse().access_token })
+          this.$router.push('/')
+          /*
+          if (authResult['code']) {
+            await this.$store.dispatch('main/logGoogle', { token: authResult['code'] })
+            this.$router.push('/')
+          } else {
+            throw new Error('impossible de se connecter via Google')
+          }
+          */
+        }, (err) => {
+          throw err
+        })
+        /*
         window.gapi.auth2.getAuthInstance().signIn()
           .then(async (googleUser) => {
             if (!googleUser || !googleUser.getAuthResponse() || !googleUser.getAuthResponse().access_token) {
@@ -90,6 +108,7 @@ export default {
           }, (err) => {
             throw err
           })
+        */
       } catch (error) {
         this.setError(error)
       }

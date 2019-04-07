@@ -14,6 +14,14 @@ const router = new Router({
       component: Home
     },
     {
+      path: '/notations',
+      name: 'notations',
+      // route level code-splitting
+      // this generates a separate chunk (notations.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "notations" */ './views/Notations.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting

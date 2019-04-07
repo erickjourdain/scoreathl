@@ -11,6 +11,15 @@
         </v-list-tile>
       </router-link>
 
+      <router-link to="/notations">
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>mdi-calculator</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-title>Notations</v-list-tile-title>
+        </v-list-tile>
+      </router-link>
+
       <router-link to="/about">
         <v-list-tile>
           <v-list-tile-action>

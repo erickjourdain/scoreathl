@@ -53,7 +53,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { concat } from 'lodash'
+import { concat, find, findIndex } from 'lodash'
 import FileInput from '@/components/FileInput'
 
 export default {
@@ -155,6 +155,16 @@ export default {
           Object.keys(this.organisateurs).forEach(key => {
             variables.organisateurs.push(this.organisateurs[key].id)
           })
+          let organisateursModify = false
+          variables.organisateurs.map(organisateur => {
+            const oldOrganisateur = find(this.competition.organisateurs, { id: organisateur })
+            if (!oldOrganisateur) { organisateursModify = true }
+          })
+          this.competition.organisateurs.map(organisateur => {
+            const oldOrganisateur = findIndex(variables.organisateurs, organisateur.id)
+            if (!oldOrganisateur) { organisateursModify = true }
+          })
+          if (!organisateursModify) delete variables.organisateurs
           variables.challenges = []
           Object.keys(this.challenges).forEach(key => {
             variables.challenges.push({
@@ -163,6 +173,14 @@ export default {
               statut: this.challenges[key].statut
             })
           })
+          let challengeModify = false
+          variables.challenges.map(challenge => {
+            const oldChallenge = find(this.competition.challenges, c => c.epreuve.id === challenge.epreuve)
+            if (challenge.essais !== oldChallenge.essais || challenge.statut !== oldChallenge.statut) {
+              challengeModify = true
+            }
+          })
+          if (!challengeModify) delete variables.challenges
         } else {
           variables = {
             nom: this.nom,

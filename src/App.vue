@@ -79,6 +79,16 @@ export default {
       })
     },
     initGoogleapi (config) {
+      window.gapi.load('auth2', async () => {
+        await window.gapi.auth2.init({
+          client_id: config.clientId,
+          scope: 'profile'
+        })
+        this.setGoogleLogin({ value: true })
+      })
+    }
+    /*
+    initGoogleapi (config) {
       window.gapi.load('client:auth2', {
         callback: () => {
           window.gapi.client.init(config)
@@ -93,6 +103,7 @@ export default {
         }
       })
     }
+    */
   },
   async created () {
     if (localStorage.getItem('apollo-token')) {
@@ -126,16 +137,14 @@ export default {
   },
   async mounted () {
     try {
-      /*
       await this.loadFbSdk(process.env.VUE_APP_FACEBOOK_CLIENTID, 'v3.2')
-      await this.loadapi('https://apis.google.com/js/plateform.js')
+      await this.loadapi('https://apis.google.com/js/platform.js')
       await this.initGoogleapi({
         clientId: process.env.VUE_APP_GOOGLE_CLIENTID,
         scope: process.env.VUE_APP_GOOGLE_SCOPE,
         discoveryDocs: [process.env.VUE_APP_GOOGLE_DISCOVERYDOCS]
       })
       this.setFBLogin({ value: true })
-      */
     } catch (error) {
       this.setError(error)
     }
