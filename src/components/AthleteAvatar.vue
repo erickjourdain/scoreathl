@@ -1,7 +1,7 @@
 <template>
-  <v-avatar color="primary" >
-    <img v-if="avatar" :src="`${env}/${avatar}`" alt="Avatar"/>
-    <v-icon dark v-else>
+  <v-avatar >
+    <img v-if="avatar" :src="image" alt="Avatar"/>
+    <v-icon v-else>
       mdi-account-circle
     </v-icon>
   </v-avatar>
@@ -14,6 +14,15 @@ export default {
   data () {
     return {
       env: process.env.VUE_APP_IMAGE
+    }
+  },
+  computed: {
+    image () {
+      if (this.avatar.indexOf('http') < 0) {
+        return `${this.env}/${this.avatar}`
+      } else {
+        return this.avatar
+      }
     }
   }
 }

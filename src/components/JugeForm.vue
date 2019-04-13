@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { differenceBy, map } from 'lodash'
 
 export default {
@@ -92,9 +92,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('main', {
-      setError: 'SET_ERROR'
-    }),
     async submit () {
       if (this.$refs.jugesForm.validate() && this.selectedEpreuve && this.countCheckbox) {
         const epreuves = []

@@ -83,9 +83,6 @@ export default {
       if (this.currentUser.service === 'google') {
         window.gapi.auth2.getAuthInstance().signOut()
       }
-      if (this.currentUser.service === 'facebook') {
-        window.FB.logout()
-      }
       this.setCurrentUSer(null)
       this.$router.push('/')
     }

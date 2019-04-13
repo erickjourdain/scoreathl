@@ -48,7 +48,7 @@ export default {
         store.dispatch('competition/modificationEquipe', { id: data.data.modificationAthlete.equipe })
       },
       error (error) {
-        store.commit('main/SET_ERROR', error)
+        this.store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
     this.observers.creerEquipe = apolloClient.subscribe({
@@ -59,7 +59,7 @@ export default {
         store.dispatch('competition/nouvelleEquipe', { id: data.data.nouvelleEquipe.equipe })
       },
       error (error) {
-        store.commit('main/SET_ERROR', error)
+        this.store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
     this.observers.modifEquipe = apolloClient.subscribe({
@@ -70,7 +70,7 @@ export default {
         store.dispatch('competition/modificationEquipe', { id: data.data.modificationEquipe.equipe })
       },
       error (error) {
-        store.commit('main/SET_ERROR', error)
+        this.store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
     this.observers.suppEquipe = apolloClient.subscribe({
@@ -81,7 +81,7 @@ export default {
         store.dispatch('competition/suppressionEquipe', { id: data.data.suppressionEquipe.equipe })
       },
       error (error) {
-        store.commit('main/SET_ERROR', error)
+        this.store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
   },

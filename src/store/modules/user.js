@@ -20,41 +20,29 @@ const getters = {
 
 const actions = {
   async users ({ commit }) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getUsers.gql')
-      })
-      commit('SET_ALL', data.users)
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getUsers.gql')
+    })
+    commit('SET_ALL', data.users)
   },
   async getUser ({ commit }, payload) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getUser.gql'),
-        variables: payload
-      })
-      commit('SET_SELECTED', data.user)
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getUser.gql'),
+      variables: payload
+    })
+    commit('SET_SELECTED', data.user)
   },
   async updateUser ({ commit, dispatch }, payload) {
-    try {
-      const { data } = await apolloClient.mutate({
-        mutation: require('@/graphql/userUpdate.gql'),
-        variables: payload
-      })
-      commit('SET_SELECTED', data.majUser)
-      dispatch('main/setSnackbar', {
-        visible: true,
-        text: `${state.selected.nom} mis à jour`,
-        color: 'success' },
-      { root: true })
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.mutate({
+      mutation: require('@/graphql/userUpdate.gql'),
+      variables: payload
+    })
+    commit('SET_SELECTED', data.majUser)
+    dispatch('main/setSnackbar', {
+      visible: true,
+      text: `${state.selected.nom} mis à jour`,
+      color: 'success' },
+    { root: true })
   },
   nouveauUser ({ commit, state }, payload) {
     commit('SET_ALL', [...state.all, payload])

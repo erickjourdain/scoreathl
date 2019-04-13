@@ -4,7 +4,7 @@ import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { WebSocketLink } from 'apollo-link-ws'
 import { onError } from 'apollo-link-error'
-import { split } from 'apollo-link'
+import { split, ApolloLink } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 
 import store from './store'
@@ -16,7 +16,6 @@ const wsLink = new WebSocketLink({
   }
 })
 
-// const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/graphql'
 const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/graphql'
 
 const authLink = setContext((_, { headers }) => {
@@ -31,38 +30,31 @@ const authLink = setContext((_, { headers }) => {
 
 const ErrorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    console.log('erreur')
-    let messages = ''
+    let text = ''
     graphQLErrors.map(({ message }) => {
-      messages = `${messages}<br>${message}`
+      text = (message.length) ? `${text}<br>${message}` : message
     })
-    store.dispatch('main/setSnackbar', { visible: true, text: messages, color: 'error' })
+    store.dispatch('main/setSnackbar', { visible: true, text, color: 'error' })
   }
-  if (networkError) store.dispatch('main/setSnackbar', { visible: true, text: networkError, color: 'error' })
-  // console.log(`[Network error]: ${networkError}`)
+  if (networkError) {
+    const text = `erreur code ${networkError.statusCode}<br>${networkError}`
+    store.dispatch('main/setSnackbar', { visible: true, text, color: 'error' })
+  }
 })
-
-const link = split(
-  // split based on operation type
-  ({ query }) => {
-    const { kind, operation } = getMainDefinition(query)
-    return kind === 'OperationDefinition' && operation === 'subscription'
-  },
-  wsLink,
-  authLink.concat(createUploadLink({ uri: httpEndpoint })),
-  ErrorLink
-)
 
 const client = new ApolloClient({
-  link,
+  link: ApolloLink.from([
+    ErrorLink,
+    split(
+      ({ query }) => {
+        const { kind, operation } = getMainDefinition(query)
+        return kind === 'OperationDefinition' && operation === 'subscription'
+      },
+      wsLink,
+      authLink.concat(createUploadLink({ uri: httpEndpoint }))
+    )
+  ]),
   cache: new InMemoryCache()
 })
-
-/*
-const client = new ApolloClient({
-  link: authLink.concat(createUploadLink({ uri: httpEndpoint })),
-  cache: new InMemoryCache()
-})
-*/
 
 export default client

@@ -1,4 +1,4 @@
-mutation CompetitionUpdata (
+mutation CompetitionUpdate (
   $id: ID!
   $nom: String,
   $emplacement: String,

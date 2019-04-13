@@ -18,13 +18,6 @@
       </div>
     </v-layout>
     <v-layout row justify-center>
-      <router-link to="/signin">
-        <v-btn @click="createUser">
-          Créer un compte
-        </v-btn>
-      </router-link>
-    </v-layout>
-    <v-layout row justify-center>
       <v-flex xs12 sm6 md4 lg3>
         <v-form ref="loginForm" v-model="valid" lazy-validation>
           <v-text-field v-model="nom" :rules="nomRules" label="nom" required>
@@ -38,6 +31,19 @@
             Reset
           </v-btn>
         </v-form>
+      </v-flex>
+    </v-layout>
+    <v-layout row justify-center>
+      <v-flex xs5 class="text-xs-right">
+        <router-link to="/signin">
+            <span>Créer un compte</span>
+        </router-link>
+      </v-flex>
+      <v-flex xs2/>
+      <v-flex xs5>
+        <router-link to="/forgetpwd">
+            Mot de passe oublié
+        </router-link>
       </v-flex>
     </v-layout>
   </v-container>
@@ -70,7 +76,6 @@ export default {
   },
   methods: {
     ...mapMutations('main', {
-      setError: 'SET_ERROR',
       setCurrentUser: 'SET_CURRENT_USER'
     }),
     async login () {
@@ -86,29 +91,9 @@ export default {
           }
           await this.$store.dispatch('main/logGoogle', { token: googleUser.getAuthResponse().access_token })
           this.$router.push('/')
-          /*
-          if (authResult['code']) {
-            await this.$store.dispatch('main/logGoogle', { token: authResult['code'] })
-            this.$router.push('/')
-          } else {
-            throw new Error('impossible de se connecter via Google')
-          }
-          */
         }, (err) => {
           throw err
         })
-        /*
-        window.gapi.auth2.getAuthInstance().signIn()
-          .then(async (googleUser) => {
-            if (!googleUser || !googleUser.getAuthResponse() || !googleUser.getAuthResponse().access_token) {
-              throw new Error('Impossible de se connecter avec le service google')
-            }
-            await this.$store.dispatch('main/logGoogle', { token: googleUser.getAuthResponse().access_token })
-            this.$router.push('/')
-          }, (err) => {
-            throw err
-          })
-        */
       } catch (error) {
         this.setError(error)
       }
@@ -121,10 +106,7 @@ export default {
         }
         await this.$store.dispatch('main/logFB', { token: response.authResponse.accessToken })
         this.$router.push('/')
-      })
-    },
-    createUser () {
-      // console.log('move to create user page')
+      }, { scope: 'public_profile,email' })
     },
     onDone (data) {
       this.setCurrentUser({ ...data.data.loginPassword })
@@ -182,8 +164,5 @@ a.fb {
 }
 a.fb.disabled {
   opacity: 0.5;
-}
-a {
-  text-decoration: none
 }
 </style>

@@ -1,0 +1,7 @@
+mutation ForgetPwd (
+  $email: String!
+  ) {
+	forgetPwd (
+    email: $email
+    )
+}

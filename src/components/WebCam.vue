@@ -101,7 +101,7 @@ export default {
         })
         .catch(err => {
           // console.log(err)
-          this.$store.commit('main/SET_ERROR', err)
+          this.store.dispatch('main/setSnackbar', { visible: true, text: err, color: 'error' })
         })
     }
   },

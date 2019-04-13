@@ -1,8 +1,17 @@
 <template>
   <v-layout row align-center justify-center wrap>
     <v-flex xs12 sm6>
-      <v-select v-model="selectedCategories" :items="categoriesM" attach chips label="Catégories" multiple
-        item-text="nom" item-value="nom">
+      <v-select v-model="selectedCategories" :items="categories" attach chips label="Catégories" multiple
+        item-value="id">
+        <template slot="selection" slot-scope="data">
+          <v-chip>{{ data.item.nom}}, {{data.item.genre}}</v-chip>
+        </template>
+        <template slot="item" slot-scope="data">
+            <v-list-tile-content>
+              <v-list-tile-title>{{`${data.item.nom}, ${data.item.genre}`}}
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </template>
       </v-select>
     </v-flex>
     <v-flex xs12 sm6>
@@ -31,7 +40,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { map, filter, indexOf, orderBy } from 'lodash'
 import LigneEquipe from '@/components/LigneEquipe'
 import LigneAthlete from '@/components/LigneAthlete'
@@ -48,9 +57,6 @@ export default {
   computed: {
     ...mapState('main', {
       currentUser: 'currentUser'
-    }),
-    ...mapGetters('categorie', {
-      categoriesM: 'getCategories'
     }),
     ...mapState('categorie', {
       categories: 'all'
@@ -73,7 +79,7 @@ export default {
         let categories = []
         if (this.selectedCategories && this.selectedCategories.length) {
           categories = map(filter(this.categories, cat => {
-            return indexOf(this.selectedCategories, cat.nom) >= 0
+            return indexOf(this.selectedCategories, cat.id) >= 0
           }), 'id')
         } else {
           categories = map(this.categories, 'id')
@@ -101,11 +107,6 @@ export default {
         return orderBy(equipes, 'points', ['desc'])
       }
     }
-  },
-  methods: {
-    ...mapMutations('main', {
-      setError: 'SET_ERROR'
-    })
   }
 }
 </script>

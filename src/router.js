@@ -46,6 +46,22 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "signin" */ './views/Signin.vue')
     },
     {
+      path: '/forgetpwd',
+      name: 'forgetpwd',
+      // route level code-splitting
+      // this generates a separate chunk (forgetpwd.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "forgetpwd" */ './views/ForgetPwd.vue')
+    },
+    {
+      path: '/resetpwd/:token',
+      name: 'resetpwd',
+      // route level code-splitting
+      // this generates a separate chunk (forgetpwd.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "resetpwd" */ './views/ResetPwd.vue')
+    },
+    {
       path: '/users',
       name: 'users',
       // route level code-splitting

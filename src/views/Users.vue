@@ -8,10 +8,7 @@
     <v-layout row justify-center wrap >
       <v-chip v-for="user in selectedUsers" :key="user.id" :color="color(user)" text-color="white">
         <router-link :to="`/user/${user.id}`">
-          <v-avatar>
-            <img :src="user.avatar" :alt="user.nom" v-if="user.avatar">
-            <v-icon v-else>mdi-account-circle</v-icon>
-          </v-avatar>
+          <athlete-avatar :avatar="user.avatar" />
         </router-link>
         {{ user.nom }}
         <v-tooltip bottom v-if="user.role === 'admin'">
@@ -37,9 +34,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import AthleteAvatar from '@/components/AthleteAvatar'
 
 export default {
   name: 'Users',
+  components: { AthleteAvatar },
   data () {
     return {
       search: ''

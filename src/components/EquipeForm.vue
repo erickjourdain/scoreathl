@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import AthleteForm from '@/components/AthleteForm'
 import PictureDialog from '@/components/PictureDialog'
 
@@ -120,9 +120,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('main', {
-      setError: 'SET_ERROR'
-    }),
     setImage (e) {
       this.form.imageUrl = e.image
     },

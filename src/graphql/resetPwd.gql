@@ -1,0 +1,9 @@
+mutation ResetPwd (
+  $token: String!
+  $password: String!
+  ) {
+	resetPwd (
+    token: $token
+    password: $password
+    )
+}

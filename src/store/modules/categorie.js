@@ -25,14 +25,10 @@ const getters = {
 
 const actions = {
   async getCategories ({ commit }) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getCategories.gql')
-      })
-      commit('SET_ALL', data.categories)
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getCategories.gql')
+    })
+    commit('SET_ALL', data.categories)
   }
 }
 

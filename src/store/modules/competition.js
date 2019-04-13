@@ -61,34 +61,26 @@ const getters = {
 
 const actions = {
   async getCompetitions ({ commit }) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getCompetitions.gql')
-      })
-      commit('SET_ALL', data.competitions)
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getCompetitions.gql')
+    })
+    commit('SET_ALL', data.competitions)
   },
   async getCompetition ({ commit }, payload) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getCompetition.gql'),
-        variables: payload
-      })
-      commit('SET_CURRENT', data.competition)
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getCompetition.gql'),
+      variables: payload
+    })
+    commit('SET_CURRENT', data.competition)
   },
   setTeam ({ commit }, payload) {
     const team = (state.current && state.current.equipes) ? find(state.current.equipes, payload) : null
     commit('SET_TEAM', team)
   },
-  setChallenge ({ commit, state }, payload) {
+  setChallenge ({ dispatch, commit, state }, payload) {
     const challenge = find(state.current.challenges, payload)
     if (!challenge) {
-      commit('main/SET_ERROR', new Error(`impossible de trouver l'épreuve`), { root: true })
+      dispatch('main/setSnackbar', { visible: true, text: `impossible de trouver l'épreuve`, color: 'error' })
     }
     commit('SET_CHALLENGE', challenge)
   },
@@ -104,207 +96,104 @@ const actions = {
     commit('SET_ATHLETE', athlete)
   },
   async updateTeamStatus ({ commit, state, dispatch }, payload) {
-    try {
-      if (!state.team || payload.id !== state.team.id) {
-        throw new Error(`impossible de modifier l'équipe`)
-      }
-      await apolloClient.mutate({
-        mutation: require('@/graphql/equipeUpdate.gql'),
-        variables: { id: state.team.id, statut: !state.team.statut }
-      })
-      /*
-      const equipes = map(state.current.equipes, equipe => {
-        if (equipe.id === state.team.id) {
-          return { ...equipe, statut: !equipe.statut }
-        } else {
-          return equipe
-        }
-      })
-      commit('SET_CURRENT', { ...state.current, equipes })
-      dispatch('setTeam', payload)
-      */
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
+    if (!state.team || payload.id !== state.team.id) {
+      throw new Error(`impossible de modifier l'équipe`)
     }
+    await apolloClient.mutate({
+      mutation: require('@/graphql/equipeUpdate.gql'),
+      variables: { id: state.team.id, statut: !state.team.statut }
+    })
   },
   async createTeam ({ commit, state }, payload) {
-    try {
-      // const { data } =
-      await apolloClient.mutate({
-        mutation: require('@/graphql/equipeCreer.gql'),
-        variables: payload
-      })
-      // commit('SET_CURRENT', { ...state.current, equipes: [...state.current.equipes, data.creerEquipe] })
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    await apolloClient.mutate({
+      mutation: require('@/graphql/equipeCreer.gql'),
+      variables: payload
+    })
   },
   async updateTeam ({ commit, state }, payload) {
-    try {
-      // const { data } =
-      await apolloClient.mutate({
-        mutation: require('@/graphql/equipeUpdate.gql'),
-        variables: payload
-      })
-      /*
-      const ind = findIndex(state.current.equipes, { id: payload.id })
-      commit('SET_CURRENT', {
-        ...state.current,
-        equipes: [
-          ...state.current.equipes.slice(0, ind),
-          data.majEquipe,
-          ...state.current.equipes.slice(ind + 1)
-        ]
-      })
-      */
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    await apolloClient.mutate({
+      mutation: require('@/graphql/equipeUpdate.gql'),
+      variables: payload
+    })
   },
   async delTeam ({ commit, state, dispatch }, payload) {
-    try {
-      if (!state.team || payload.id !== state.team.id) {
-        throw new Error(`impossible de supprimer l'équipe`)
-      }
-      await apolloClient.mutate({
-        mutation: require('@/graphql/delEquipe.gql'),
-        variables: { id: state.team.id }
-      })
-      /*
-      commit('SET_CURRENT', { ...state.current, equipes: reject(state.current.equipes, payload) })
-      dispatch('setTeam', payload)
-      */
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
+    if (!state.team || payload.id !== state.team.id) {
+      throw new Error(`impossible de supprimer l'équipe`)
     }
+    await apolloClient.mutate({
+      mutation: require('@/graphql/delEquipe.gql'),
+      variables: { id: state.team.id }
+    })
   },
   async saveScore ({ state, commit, dispatch }, payload) {
-    try {
-      // const { data } =
-      await apolloClient.mutate({
-        mutation: require('@/graphql/setResultat.gql'),
-        variables: {
-          athlete: state.score.athlete.id,
-          resultat: {
-            challenge: state.score.challenge.id,
-            resultats: payload.res
-          }
+    await apolloClient.mutate({
+      mutation: require('@/graphql/setResultat.gql'),
+      variables: {
+        athlete: state.score.athlete.id,
+        resultat: {
+          challenge: state.score.challenge.id,
+          resultats: payload.res
         }
-      })
-      /*
-      const newCurrent = {
-        ...state.current,
-        equipes: map(state.current.equipes, equipe => {
-          if (equipe.adulte.id === state.score.athlete.id) {
-            return {
-              ...equipe,
-              points: equipe.points + data.athleteResultat.points,
-              adulte: {
-                ...equipe.adulte,
-                scores: data.athleteResultat.scores
-              }
-            }
-          } else if (equipe.enfant.id === state.score.athlete.id) {
-            return {
-              ...equipe,
-              points: equipe.points + data.athleteResultat.points,
-              enfant: {
-                ...equipe.enfant,
-                scores: data.athleteResultat.scores
-              }
-            }
-          } else {
-            return equipe
-          }
-        })
       }
-      commit('SET_CURRENT', newCurrent)
-      */
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    })
   },
   async defineJuge ({ commit, state }, payload) {
-    try {
-      const { data } = await apolloClient.mutate({
-        mutation: require('@/graphql/jugeCreer.gql'),
-        variables: {
-          competition: state.current.id,
-          juges: payload
-        }
-      })
-      commit('SET_CURRENT', {
-        ...state.current,
-        juges: data.defineCompetitionJuges.juges
-      })
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.mutate({
+      mutation: require('@/graphql/jugeCreer.gql'),
+      variables: {
+        competition: state.current.id,
+        juges: payload
+      }
+    })
+    commit('SET_CURRENT', {
+      ...state.current,
+      juges: data.defineCompetitionJuges.juges
+    })
   },
   async createCompetition ({ commit, state }, payload) {
-    try {
-      const { data } = await apolloClient.mutate({
-        mutation: require('@/graphql/competitionCreer.gql'),
-        variables: payload
-      })
-      commit('SET_ALL', [...state.all, data.creerCompetition])
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.mutate({
+      mutation: require('@/graphql/competitionCreer.gql'),
+      variables: payload
+    })
+    commit('SET_ALL', [...state.all, data.creerCompetition])
   },
   async updateCompetition ({ commit, state }, payload) {
-    try {
-      const { data } = await apolloClient.mutate({
-        mutation: require('@/graphql/competitionUpdate.gql'),
-        variables: payload
-      })
-      const competitionIndex = findIndex(state.all, { id: payload.id })
-      commit('SET_ALL', [...state.all.slice(0, competitionIndex), data.majCompetition, ...state.all.slice(competitionIndex + 1)])
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.mutate({
+      mutation: require('@/graphql/competitionUpdate.gql'),
+      variables: payload
+    })
+    const competitionIndex = findIndex(state.all, { id: payload.id })
+    commit('SET_ALL', [...state.all.slice(0, competitionIndex), data.majCompetition, ...state.all.slice(competitionIndex + 1)])
   },
   async nouvelleEquipe ({ commit, state }, payload) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getEquipe.gql'),
-        variables: payload,
-        fetchPolicy: 'network-only'
-      })
-      commit('SET_CURRENT', { ...state.current, equipes: [...state.current.equipes, data.equipe] })
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getEquipe.gql'),
+      variables: payload,
+      fetchPolicy: 'network-only'
+    })
+    commit('SET_CURRENT', { ...state.current, equipes: [...state.current.equipes, data.equipe] })
   },
   async modificationEquipe ({ commit, state }, payload) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getEquipe.gql'),
-        variables: payload,
-        fetchPolicy: 'network-only'
-      })
-      const ind = findIndex(state.current.equipes, { id: payload.id })
-      commit('SET_CURRENT', {
-        ...state.current,
-        equipes: [
-          ...state.current.equipes.slice(0, ind),
-          data.equipe,
-          ...state.current.equipes.slice(ind + 1)
-        ]
-      })
-      if (state.team && data.equipe.id === state.team.id) {
-        commit('SET_TEAM', data.equipe)
-      }
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getEquipe.gql'),
+      variables: payload,
+      fetchPolicy: 'network-only'
+    })
+    const ind = findIndex(state.current.equipes, { id: payload.id })
+    commit('SET_CURRENT', {
+      ...state.current,
+      equipes: [
+        ...state.current.equipes.slice(0, ind),
+        data.equipe,
+        ...state.current.equipes.slice(ind + 1)
+      ]
+    })
+    if (state.team && data.equipe.id === state.team.id) {
+      commit('SET_TEAM', data.equipe)
     }
   },
   async suppressionEquipe ({ commit, state }, payload) {
-    try {
-      commit('SET_CURRENT', { ...state.current, equipes: reject(state.current.equipes, payload) })
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    commit('SET_CURRENT', { ...state.current, equipes: reject(state.current.equipes, payload) })
   }
 }
 

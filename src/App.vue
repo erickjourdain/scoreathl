@@ -3,7 +3,6 @@
     <v-container grid-list-md>
       <navbar />
       <v-content>
-        <error v-if="componentError" :error="componentError" />
         <snack-info />
         <router-view/>
       </v-content>
@@ -14,7 +13,6 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 import apolloClient from '@/apollo'
-import Error from '@/components/Error'
 import SnackInfo from '@/components/SnackInfo'
 import Navbar from '@/components/Navbar'
 
@@ -22,7 +20,6 @@ export default {
   name: 'App',
   components: {
     Navbar,
-    Error,
     SnackInfo
   },
   data () {
@@ -38,7 +35,6 @@ export default {
   },
   methods: {
     ...mapMutations('main', {
-      setError: 'SET_ERROR',
       setFBLogin: 'SET_FB_LOGIN_SERVICE',
       setGoogleLogin: 'SET_GOOGLE_LOGIN_SERVICE'
     }),
@@ -61,9 +57,9 @@ export default {
           version,
           cookie: true
         })
-        window.FB.AppEvents.logPageView()
       }
     },
+
     loadapi (apiUrl) {
       return new Promise((resolve) => {
         var script = document.createElement('script')
@@ -87,23 +83,6 @@ export default {
         this.setGoogleLogin({ value: true })
       })
     }
-    /*
-    initGoogleapi (config) {
-      window.gapi.load('client:auth2', {
-        callback: () => {
-          window.gapi.client.init(config)
-            .then(() => {
-              this.setGoogleLogin({ value: true })
-            }, () => {
-              this.setError(new Error('Impossible d\'initialiser Google api'))
-            })
-        },
-        onerror: () => {
-          this.setError(new Error('Impossible de charger Google api'))
-        }
-      })
-    }
-    */
   },
   async created () {
     if (localStorage.getItem('apollo-token')) {
@@ -121,7 +100,7 @@ export default {
         store.dispatch('user/nouveauUser', data.data.nouveauUser)
       },
       error (error) {
-        store.commit('main/SET_ERROR', error)
+        store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
     apolloClient.subscribe({
@@ -131,7 +110,7 @@ export default {
         store.dispatch('user/modificationUser', data.data.modificationUser)
       },
       error (error) {
-        store.commit('main/SET_ERROR', error)
+        store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
   },

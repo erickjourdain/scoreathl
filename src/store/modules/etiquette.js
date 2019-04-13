@@ -9,36 +9,24 @@ const getters = {}
 
 const actions = {
   async getEtiquettes ({ commit }) {
-    try {
-      const { data } = await apolloClient.query({
-        query: require('@/graphql/getEtiquettes.gql')
-      })
-      commit('SET_ALL', data.etiquettes)
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.query({
+      query: require('@/graphql/getEtiquettes.gql')
+    })
+    commit('SET_ALL', data.etiquettes)
   },
   async createEtiquette ({ commit, state }, payload) {
-    try {
-      const { data } = await apolloClient.mutate({
-        mutation: require('@/graphql/etiquetteCreer.gql'),
-        variables: payload
-      })
-      commit('SET_ALL', [...state.all, data.creerEtiquette])
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    const { data } = await apolloClient.mutate({
+      mutation: require('@/graphql/etiquetteCreer.gql'),
+      variables: payload
+    })
+    commit('SET_ALL', [...state.all, data.creerEtiquette])
   },
   async delEtiquette ({ commit, state }, payload) {
-    try {
-      await apolloClient.mutate({
-        mutation: require('@/graphql/etiquetteSupprimer.gql'),
-        variables: payload
-      })
-      commit('SET_ALL', reject(state.all, { id: payload.id }))
-    } catch (error) {
-      commit('main/SET_ERROR', error, { root: true })
-    }
+    await apolloClient.mutate({
+      mutation: require('@/graphql/etiquetteSupprimer.gql'),
+      variables: payload
+    })
+    commit('SET_ALL', reject(state.all, { id: payload.id }))
   }
 }
 

@@ -21,7 +21,7 @@
 
 <script>
 import { map } from 'lodash'
-import { mapMutations, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import JugeForm from '@/components/JugeForm'
 import CompetitionJuges from '@/components/CompetitionJuges'
 
@@ -40,9 +40,6 @@ export default {
     })
   },
   methods: {
-    ...mapMutations('main', {
-      setError: 'SET_ERROR'
-    }),
     async deleteJuge (juge) {
       const juges = []
       map(this.juges, j => {

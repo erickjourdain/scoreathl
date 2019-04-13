@@ -53,7 +53,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { concat, find, findIndex } from 'lodash'
+import { concat, find, map, isEqual } from 'lodash'
 import FileInput from '@/components/FileInput'
 
 export default {
@@ -71,7 +71,7 @@ export default {
       nom: this.competition.nom,
       emplacement: this.competition.emplacement,
       date: this.$moment(this.competition.date).format('YYYY-MM-DD'),
-      organisateurs: this.competition.organisateurs,
+      organisateurs: map(this.competition.organisateurs, 'id'),
       statut: this.competition.statut,
       pwd: null,
       challenges: Object.assign({}, this.competition.challenges),
@@ -151,20 +151,9 @@ export default {
           if (this.pwd) {
             variables.pwd = this.pwd
           }
-          variables.organisateurs = []
-          Object.keys(this.organisateurs).forEach(key => {
-            variables.organisateurs.push(this.organisateurs[key].id)
-          })
-          let organisateursModify = false
-          variables.organisateurs.map(organisateur => {
-            const oldOrganisateur = find(this.competition.organisateurs, { id: organisateur })
-            if (!oldOrganisateur) { organisateursModify = true }
-          })
-          this.competition.organisateurs.map(organisateur => {
-            const oldOrganisateur = findIndex(variables.organisateurs, organisateur.id)
-            if (!oldOrganisateur) { organisateursModify = true }
-          })
-          if (!organisateursModify) delete variables.organisateurs
+          if (!isEqual(map(this.competition.organisateurs, 'id'), this.organisateurs)) {
+            variables.organisateurs = this.organisateurs
+          }
           variables.challenges = []
           Object.keys(this.challenges).forEach(key => {
             variables.challenges.push({
