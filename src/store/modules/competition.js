@@ -47,7 +47,7 @@ const getters = {
     return athletes
   },
   listChallenges (state) {
-    return state.current.challenges
+    return (state.current) ? state.current.challenges : []
   },
   resultats (state) {
     if (!state.score || !state.score.athlete || !state.score.challenge) {

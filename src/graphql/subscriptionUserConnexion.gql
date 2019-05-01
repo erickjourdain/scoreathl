@@ -1,0 +1,7 @@
+subscription userConnexion {
+    connecteUser {
+      id
+      nom
+      avatar
+  }
+}

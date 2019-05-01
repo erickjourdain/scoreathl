@@ -29,7 +29,7 @@ const actions = {
     dispatch('logPwd', { nom: payload.nom, password: payload.password })
   },
   async logToken ({ commit }, payload) {
-    const { data } = await apolloClient.query({ query: require('@/graphql/me.gql') })
+    const { data } = await apolloClient.mutate({ mutation: require('@/graphql/me.gql') })
     commit('SET_CURRENT_USER', data.me)
     sessionStorage.setItem('user', JSON.stringify({ nom: data.me.nom, role: data.me.role }))
   },
@@ -59,6 +59,9 @@ const actions = {
     commit('SET_CURRENT_USER', data.loginGoogle.user)
     localStorage.setItem('apollo-token', data.loginGoogle.token)
     sessionStorage.setItem('user', JSON.stringify({ nom: data.loginGoogle.user.nom, role: data.loginGoogle.user.role }))
+  },
+  async logout () {
+    await apolloClient.mutate({ mutation: require('@/graphql/logout.gql') })
   },
   setSnackbar ({ commit }, payload) {
     commit('SET_SNACKBAR', payload)

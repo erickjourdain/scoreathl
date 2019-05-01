@@ -6,6 +6,9 @@
         <snack-info />
         <router-view/>
       </v-content>
+      <div v-if="currentUser && participants.length">
+        <chat :participants="participants"/>
+      </div>
     </v-container>
   </v-app>
 </template>
@@ -15,12 +18,14 @@ import { mapMutations, mapState } from 'vuex'
 import apolloClient from '@/apollo'
 import SnackInfo from '@/components/SnackInfo'
 import Navbar from '@/components/Navbar'
+import Chat from '@/components/Chat'
 
 export default {
   name: 'App',
   components: {
     Navbar,
-    SnackInfo
+    SnackInfo,
+    Chat
   },
   data () {
     return {
@@ -30,7 +35,10 @@ export default {
   },
   computed: {
     ...mapState('main', {
-      componentError: 'error'
+      currentUser: 'currentUser'
+    }),
+    ...mapState('user', {
+      participants: 'connected'
     })
   },
   methods: {
@@ -38,6 +46,11 @@ export default {
       setFBLogin: 'SET_FB_LOGIN_SERVICE',
       setGoogleLogin: 'SET_GOOGLE_LOGIN_SERVICE'
     }),
+    async handlerWindowClose () {
+      if (this.currentUser) {
+        await this.$store.dispatch('main/logout')
+      }
+    },
     loadFbSdk (appId, version) {
       (function (d, s, id) { // eslint-disable-line func-names
         const fjs = d.getElementsByTagName(s)[0]
@@ -59,7 +72,6 @@ export default {
         })
       }
     },
-
     loadapi (apiUrl) {
       return new Promise((resolve) => {
         var script = document.createElement('script')
@@ -85,6 +97,7 @@ export default {
     }
   },
   async created () {
+    window.addEventListener('beforeunload', this.handlerWindowClose)
     if (localStorage.getItem('apollo-token')) {
       this.$store.dispatch('main/logToken', { token: localStorage.getItem('apollo-token') })
     }
@@ -92,6 +105,8 @@ export default {
     await this.$store.dispatch('categorie/getCategories')
     await this.$store.dispatch('epreuve/getEpreuves')
     await this.$store.dispatch('etiquette/getEtiquettes')
+    await this.$store.dispatch('user/connected')
+    // await this.$store.dispatch('message/getMessages')
     const store = this.$store
     apolloClient.subscribe({
       query: require('@/graphql/subscriptionUserCreer.gql')
@@ -108,6 +123,36 @@ export default {
     }).subscribe({
       next (data) {
         store.dispatch('user/modificationUser', data.data.modificationUser)
+      },
+      error (error) {
+        store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
+      }
+    })
+    apolloClient.subscribe({
+      query: require('@/graphql/subscriptionUserConnexion.gql')
+    }).subscribe({
+      next (data) {
+        store.dispatch('user/userConnexion', data.data.connecteUser)
+      },
+      error (error) {
+        store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
+      }
+    })
+    apolloClient.subscribe({
+      query: require('@/graphql/subscriptionUserDeconnexion.gql')
+    }).subscribe({
+      next (data) {
+        store.dispatch('user/userDeconnexion', data.data.deconnecteUser)
+      },
+      error (error) {
+        store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
+      }
+    })
+    apolloClient.subscribe({
+      query: require('@/graphql/subscriptionNouveauMessage.gql')
+    }).subscribe({
+      next (data) {
+        store.dispatch('message/nouveauMessage', data.data.nouveauMessage)
       },
       error (error) {
         store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })

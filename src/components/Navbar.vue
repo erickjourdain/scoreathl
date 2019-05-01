@@ -78,6 +78,7 @@ export default {
       this.$router.push(route)
     },
     async logout () {
+      await this.$store.dispatch('main/logout')
       localStorage.removeItem('apollo-token')
       sessionStorage.removeItem('user')
       if (this.currentUser.service === 'google') {

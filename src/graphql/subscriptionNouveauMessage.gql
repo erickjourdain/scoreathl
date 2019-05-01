@@ -1,0 +1,13 @@
+subscription nouveauMessage {
+  nouveauMessage {
+    type
+    text
+    emoji
+    createdAt
+    user {
+      id
+      avatar
+      nom
+    }
+  }
+}

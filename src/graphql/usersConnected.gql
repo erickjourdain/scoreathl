@@ -1,0 +1,7 @@
+query usersConnected{
+    usersConnected {
+      id
+      nom
+      avatar
+    }
+  }

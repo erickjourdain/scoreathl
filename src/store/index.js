@@ -7,6 +7,7 @@ import epreuve from './modules/epreuve'
 import etiquette from './modules/etiquette'
 import categorie from './modules/categorie'
 import competition from './modules/competition'
+import message from './modules/message'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     etiquette,
     epreuve,
     categorie,
-    competition
+    competition,
+    message
   },
   strict: debug
 })
