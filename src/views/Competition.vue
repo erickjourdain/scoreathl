@@ -6,39 +6,7 @@
       </v-flex>
 
       <v-flex xs12 v-else >
-        <v-toolbar>
-          <v-toolbar-title class="display-1 font-weight-medium text-uppercase">
-            {{ competition.nom }}
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon>
-            <v-icon>mdi-trophy-outline</v-icon>
-          </v-btn>
-          <v-btn icon>
-            <v-icon>mdi-account-plus</v-icon>
-          </v-btn>
-          <v-menu bottom left v-if="organisateur || isAdmin">
-            <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-tile>
-                <v-list-tile-title>mettre à jour</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-title>équipes</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-title>planning</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-title>ajouter juge</v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
+        <competition-toolbar />
         <br>
         <span class="headline font-weight-medium text-capitalize" >
           {{ competition.emplacement }}
@@ -53,8 +21,10 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import apolloClient from '@/apollo'
+
+import CompetitionToolbar from '@/components/CompetitionToolbar'
 
 export default {
   name: 'Competition',
@@ -63,16 +33,12 @@ export default {
       observers: {}
     }
   },
+  components: {
+    CompetitionToolbar
+  },
   computed: {
     ...mapState('competition', {
       competition: 'current'
-    }),
-    ...mapGetters('main', {
-      isAdmin: 'isAdmin'
-    }),
-    ...mapGetters('competition', {
-      organisateur: 'organisateur',
-      juges: 'juges'
     })
   },
   created () {

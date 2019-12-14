@@ -105,7 +105,7 @@
 
         <router-link :to="`/competition/${currentCompetition.id}/equipes`" v-if="organisateur || isAdmin">
           <v-list-tile>
-            <v-list-tile-title>equipes</v-list-tile-title>
+            <v-list-tile-title>liste des équipes</v-list-tile-title>
             <v-list-tile-action>
               <v-icon>mdi-eye</v-icon>
             </v-list-tile-action>
