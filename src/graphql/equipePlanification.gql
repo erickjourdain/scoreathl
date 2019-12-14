@@ -1,0 +1,11 @@
+mutation planifierEquipe (
+  $id: ID!
+  $challenge: ID!,
+  $statut: Int!
+  ) {
+	planifierEquipe (
+    id: $id,
+    challenge: $challenge,
+    statut: $statut,
+    )
+}

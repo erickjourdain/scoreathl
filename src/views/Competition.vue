@@ -1,13 +1,44 @@
 <template>
   <div>
-    <v-layout row justify-center wrap >
+    <v-layout row align-center justify-center wrap >
       <v-flex xs12 v-if="!competition">
         Chargement des données ...
       </v-flex>
+
       <v-flex xs12 v-else >
-        <span class="display-1 font-weight-medium text-uppercase" >
-          {{ competition.nom }}
-        </span>
+        <v-toolbar>
+          <v-toolbar-title class="display-1 font-weight-medium text-uppercase">
+            {{ competition.nom }}
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon>
+            <v-icon>mdi-trophy-outline</v-icon>
+          </v-btn>
+          <v-btn icon>
+            <v-icon>mdi-account-plus</v-icon>
+          </v-btn>
+          <v-menu bottom left v-if="organisateur || isAdmin">
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-tile>
+                <v-list-tile-title>mettre à jour</v-list-tile-title>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-title>équipes</v-list-tile-title>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-title>planning</v-list-tile-title>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-title>ajouter juge</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+        </v-toolbar>
         <br>
         <span class="headline font-weight-medium text-capitalize" >
           {{ competition.emplacement }}
@@ -22,7 +53,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import apolloClient from '@/apollo'
 
 export default {
@@ -35,6 +66,13 @@ export default {
   computed: {
     ...mapState('competition', {
       competition: 'current'
+    }),
+    ...mapGetters('main', {
+      isAdmin: 'isAdmin'
+    }),
+    ...mapGetters('competition', {
+      organisateur: 'organisateur',
+      juges: 'juges'
     })
   },
   created () {

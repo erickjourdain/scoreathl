@@ -191,14 +191,14 @@ export default {
         if (this.image) {
           variables.image = this.image
         }
-        if (this.competition.id) {
-          await this.$store.dispatch('competition/updateCompetition', variables)
-        } else {
-          await this.$store.dispatch('competition/createCompetition', variables)
-        }
-        if (!this.error) {
+        try {
+          if (this.competition.id) {
+            await this.$store.dispatch('competition/updateCompetition', variables)
+          } else {
+            await this.$store.dispatch('competition/createCompetition', variables)
+          }
           this.$router.push('/')
-        } else {
+        } catch {
           this.loading = false
         }
       }

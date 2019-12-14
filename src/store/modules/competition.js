@@ -137,6 +137,12 @@ const actions = {
       }
     })
   },
+  async challengePlanification (context, payload) {
+    await apolloClient.mutate({
+      mutation: require('@/graphql/equipePlanification.gql'),
+      variables: payload
+    })
+  },
   async defineJuge ({ commit, state }, payload) {
     const { data } = await apolloClient.mutate({
       mutation: require('@/graphql/jugeCreer.gql'),

@@ -182,7 +182,23 @@ const router = new Router({
           // route level code-splitting
           // this generates a separate chunk (setScore.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "setScore" */ './views/SetScore.vue')
+          component: () => import(/* webpackChunkName: "setScore" */ './views/SetScore.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['admin', 'organisateur', 'juge']
+          }
+        },
+        {
+          path: 'planning',
+          names: 'planning',
+          // route level code-splitting
+          // this generates a separate chunk (setScore.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import(/* webpackChunkName: "planning" */ './views/Planning.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['admin', 'organisateur']
+          }
         }
       ]
     }

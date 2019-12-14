@@ -112,6 +112,15 @@
           </v-list-tile>
         </router-link>
 
+        <router-link :to="`/competition/${currentCompetition.id}/planning`" v-if="organisateur || isAdmin">
+          <v-list-tile>
+            <v-list-tile-title>planning des épreuves</v-list-tile-title>
+            <v-list-tile-action>
+              <v-icon>mdi-calendar</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </router-link>
+
         <router-link :to="`/competition/${currentCompetition.id}/juges`" v-if="organisateur || isAdmin">
           <v-list-tile>
             <v-list-tile-title>définir les juges</v-list-tile-title>

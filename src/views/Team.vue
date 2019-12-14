@@ -38,6 +38,7 @@ export default {
       await this.$store.dispatch('competition/updateTeamStatus', { id: this.$route.params.equipe })
     },
     back () {
+      // this.$router.go(-1)
       this.$router.push(`/competition/${this.$route.params.competition}`)
     }
   },

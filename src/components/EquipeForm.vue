@@ -131,6 +131,7 @@ export default {
     },
     async submit () {
       if (this.$refs.equipeForm.validate()) {
+        this.loading = true
         let variables = {}
         if (this.equipe.id) {
           variables.id = this.equipe.id
@@ -202,12 +203,16 @@ export default {
           if (!variables.enfant) variables.enfant = {}
           variables.enfant.avatar = await this.srcToFile(this.form.enfant.imageUrl, `${this.form.enfant.nom}_${this.form.enfant.prenom}.jpg`, 'image/jpeg')
         }
-        if (this.equipe.id) {
-          await this.$store.dispatch('competition/updateTeam', variables)
-        } else {
-          await this.$store.dispatch('competition/createTeam', variables)
+        try {
+          if (this.equipe.id) {
+            await this.$store.dispatch('competition/updateTeam', variables)
+          } else {
+            await this.$store.dispatch('competition/createTeam', variables)
+          }
+          this.$router.push(`/competition/${this.$route.params.competition}`)
+        } catch {
+          this.loading = false
         }
-        this.$router.push(`/competition/${this.$route.params.competition}`)
       }
     },
     srcToFile (src, fileName, mimeType) {
