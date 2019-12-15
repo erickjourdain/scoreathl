@@ -1,0 +1,20 @@
+mutation updateCategorie (
+      $athlete: ID!,
+      $annee: Int!,
+      $genre: String!
+  ) {
+  athleteCategorie(
+    athlete: $athlete, 
+    annee: $annee,
+    genre: $genre)
+  {
+    prenom
+    nom
+    categorie {
+      id
+      nom
+    }
+    points
+  }
+}
+

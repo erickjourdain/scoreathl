@@ -1,12 +1,21 @@
 <template>
   <div>
+    <categorie-dialog :dialog="categorieDialog" @closeDialog="categorieDialog = false" :athlete="athlete"/>
     <v-layout align-center>
       <v-flex xs8>
         <span class="headline text-capitalize">
           {{ athlete.prenom }} {{ athlete.nom }}
         </span>
         <br/>
-        <span>
+        <v-tooltip bottom v-if="isAdmin || organisateur">
+          <template v-slot:activator="{ on }">
+            <span v-on="on" class="link" @click="categorieDialog = true">
+              {{ athlete.categorie.nom }} - {{ athlete.annee }}
+            </span>
+          </template>
+          <span>modifier la catégorie</span>
+        </v-tooltip>
+        <span v-else>
           {{ athlete.categorie.nom }} - {{ athlete.annee }}
         </span>
       </v-flex>
@@ -32,18 +41,31 @@
 
 <script>
 import { orderBy } from 'lodash'
+import { mapGetters } from 'vuex'
+
 import ResultatLigneEquipeCard from '@/components/ResultatLigneEquipeCard'
+import CategorieDialog from '@/components/CategorieDialog'
 
 export default {
   name: 'AthleteEquipeCard',
   props: [ 'athlete' ],
-  components: { ResultatLigneEquipeCard },
+  components: {
+    ResultatLigneEquipeCard,
+    CategorieDialog
+  },
   data () {
     return {
-      env: process.env.VUE_APP_IMAGE
+      env: process.env.VUE_APP_IMAGE,
+      categorieDialog: false
     }
   },
   computed: {
+    ...mapGetters('main', {
+      isAdmin: 'isAdmin'
+    }),
+    ...mapGetters('competition', {
+      organisateur: 'organisateur'
+    }),
     points () {
       return (this.athlete.points >= 1) ? `${this.athlete.points} pts` : `${this.athlete.points} pt`
     },
@@ -61,6 +83,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.link {
+  cursor: pointer;
+}
 </style>
