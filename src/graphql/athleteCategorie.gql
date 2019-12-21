@@ -1,4 +1,4 @@
-mutation updateCategorie (
+mutation athleteCategorie (
       $athlete: ID!,
       $annee: Int!,
       $genre: String!

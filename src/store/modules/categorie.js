@@ -29,6 +29,12 @@ const actions = {
       query: require('@/graphql/getCategories.gql')
     })
     commit('SET_ALL', data.categories)
+  },
+  async updateCategories (context, payload) {
+    await apolloClient.mutate({
+      mutation: require('@/graphql/categoriesUpdate.gql'),
+      variables: payload
+    })
   }
 }
 

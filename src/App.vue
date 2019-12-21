@@ -158,6 +158,16 @@ export default {
         store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
+    apolloClient.subscribe({
+      query: require('@/graphql/subscriptionCategoriesUpdate.gql')
+    }).subscribe({
+      next (data) {
+        store.commit('categorie/SET_ALL', data.data.modificationCategories)
+      },
+      error (error) {
+        store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
+      }
+    })
   },
   async mounted () {
     try {

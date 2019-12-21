@@ -1,0 +1,5 @@
+mutation categoriesUpdate (
+	$categoriesInput: [CategorieInput!]!)
+{
+	updateCategories (categories: $categoriesInput)
+}

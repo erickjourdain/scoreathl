@@ -57,12 +57,15 @@ export default {
   methods: {
     async save () {
       if (this.annee && this.genre) {
-        await this.$store.dispatch('competition/updateCategorie', { athlete: this.athlete.id, annee: parseInt(this.annee), genre: this.genre })
+        this.update = true
+        await this.$store.dispatch('competition/setAthleteCategorie', { athlete: this.athlete.id, annee: parseInt(this.annee), genre: this.genre })
+        this.update = false
         this.$emit('closeDialog')
       }
     }
   },
   created () {
+    this.update = false
     this.genre = this.athlete.categorie.genre
     this.annee = this.athlete.annee
   }

@@ -110,6 +110,18 @@ const router = new Router({
       }
     },
     {
+      path: '/categories',
+      name: 'categories',
+      // route level code-splitting
+      // this generates a separate chunk (tags.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "categories" */ './views/Categories.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['admin']
+      }
+    },
+    {
       path: '/competition/:competition',
       // route level code-splitting
       // this generates a separate chunk (competition.[hash].js) for this route

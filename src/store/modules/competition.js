@@ -201,9 +201,9 @@ const actions = {
   async suppressionEquipe ({ commit, state }, payload) {
     commit('SET_CURRENT', { ...state.current, equipes: reject(state.current.equipes, payload) })
   },
-  async updateCategorie (context, payload) {
+  async setAthleteCategorie (context, payload) {
     await apolloClient.mutate({
-      mutation: require('@/graphql/updateCategorie.gql'),
+      mutation: require('@/graphql/athleteCategorie.gql'),
       variables: payload
     })
   }

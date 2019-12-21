@@ -60,6 +60,15 @@
               </v-list-tile-action>
           </v-list-tile>
         </router-link>
+
+        <router-link to="/categories">
+          <v-list-tile>
+            <v-list-tile-title>catégories</v-list-tile-title>
+              <v-list-tile-action>
+                <v-icon>mdi-human-male-male</v-icon>
+              </v-list-tile-action>
+          </v-list-tile>
+        </router-link>
       </v-list-group>
 
       <v-list-group prepend-icon="mdi-run-fast" v-if="currentCompetition" >
