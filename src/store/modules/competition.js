@@ -6,7 +6,10 @@ const state = {
   team: null,
   score: null,
   all: [],
-  updateScore: false
+  updateScore: false,
+  fetchPolicy: {
+    competition: 'network-only'
+  }
 }
 
 const getters = {
@@ -60,11 +63,16 @@ const getters = {
 }
 
 const actions = {
-  async getCompetitions ({ commit }) {
+  async getCompetitions ({ commit, dispatch, state }) {
     const { data } = await apolloClient.query({
-      query: require('@/graphql/getCompetitions.gql')
+      query: require('@/graphql/getCompetitions.gql'),
+      fetchPolicy: state.fetchPolicy.competition
     })
     commit('SET_ALL', data.competitions)
+    dispatch('setFecthPolicy', { competition: 'cache-first' })
+  },
+  setFecthPolicy ({ commit, state }, payload) {
+    commit('SET_FETCH_POLICY', { ...state.fetchPolicy, ...payload })
   },
   async getCompetition ({ commit }, payload) {
     const { data } = await apolloClient.query({
@@ -156,12 +164,12 @@ const actions = {
       juges: data.defineCompetitionJuges.juges
     })
   },
-  async createCompetition ({ commit, state }, payload) {
-    const { data } = await apolloClient.mutate({
+  async createCompetition (context, payload) {
+    await apolloClient.mutate({
       mutation: require('@/graphql/competitionCreer.gql'),
       variables: payload
     })
-    commit('SET_ALL', [...state.all, data.creerCompetition])
+    // commit('SET_ALL', [...state.all, data.creerCompetition])
   },
   async updateCompetition ({ commit, state }, payload) {
     const { data } = await apolloClient.mutate({
@@ -206,10 +214,19 @@ const actions = {
       mutation: require('@/graphql/athleteCategorie.gql'),
       variables: payload
     })
+  },
+  async suppressionCompetition ({ commit, state }, payload) {
+    await apolloClient.mutate({
+      mutation: require('@/graphql/delCompetition.gql'),
+      variables: payload
+    })
   }
 }
 
 const mutations = {
+  SET_FETCH_POLICY (state, payload) {
+    state.fetchPolicy = payload
+  },
   SET_ALL (state, payload) {
     state.all = payload
   },

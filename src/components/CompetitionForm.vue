@@ -197,6 +197,7 @@ export default {
           } else {
             await this.$store.dispatch('competition/createCompetition', variables)
           }
+          this.$store.dispatch('competition/setFecthPolicy', { competition: 'network-only' })
           this.$router.push('/')
         } catch {
           this.loading = false

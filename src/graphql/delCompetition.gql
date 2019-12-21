@@ -1,0 +1,7 @@
+mutation  delCompetition(
+  $id: ID!
+  ) {
+	delCompetition (
+    id: $id
+    )
+}

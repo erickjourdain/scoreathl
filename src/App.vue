@@ -168,6 +168,16 @@ export default {
         store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
       }
     })
+    apolloClient.subscribe({
+      query: require('@/graphql/subscriptionCompetitionsUpdate.gql')
+    }).subscribe({
+      next () {
+        store.dispatch('competition/setFecthPolicy', { competition: 'network-only' })
+      },
+      error (error) {
+        store.dispatch('main/setSnackbar', { visible: true, text: error, color: 'error' })
+      }
+    })
   },
   async mounted () {
     try {
